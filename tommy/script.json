@@ -1,28 +1,142 @@
 [
-  {"id": "hook1", "scene": "hook_pose", "text": "You walk out of prison with nothing. No money. No friends. Fifteen years of your life, gone."},
-  {"id": "hook2", "scene": "hook_list", "text": "A few years later, you own an entire city. And all you ever wanted... was your money back."},
-  {"id": "book", "scene": "book", "text": "This is the whole life of Tommy Vercetti. Told as if it were yours."},
-  {"id": "birth", "scene": "baby", "text": "You're born around 1951, in Liberty City. Nobody really knows much about your childhood. Which, honestly, is probably for the best."},
-  {"id": "forelli", "scene": "sonny", "text": "What we do know is this. You grow up and go to work for the Forelli family. Your boss is Sonny Forelli. He smiles a lot. That should worry you."},
-  {"id": "ch1", "scene": "chapter", "chapter": "I", "title": "The Harwood Butcher", "text": ""},
-  {"id": "harwood", "scene": "harwood", "text": "In 1971, Sonny sends you to Harwood to deal with one man. It's a setup. Eleven men are waiting for you. You walk out. They don't."},
-  {"id": "news", "scene": "newspaper", "text": "The newspapers call you the Harwood Butcher. The judge calls it fifteen years."},
-  {"id": "prison", "scene": "prison", "text": "So you sit in a cell. You keep your mouth shut. You never give up a single name. And Sonny? Sonny never visits."},
-  {"id": "ch2", "scene": "chapter", "chapter": "II", "title": "Welcome to Vice City", "text": ""},
-  {"id": "arrive", "scene": "vicecity", "text": "In 1986, you're finally out. Sonny's welcome home present? Get out of town. Fly down to Vice City, watch over a little deal, and keep a low profile."},
-  {"id": "ken", "scene": "ken", "text": "Your new lawyer is Ken Rosenberg. He talks fast, sweats a lot, and he's already nervous. Great sign."},
-  {"id": "deal", "scene": "deal", "text": "The deal goes wrong in about four seconds. Masked men. Gunfire. The money? Gone. The product? Gone. You and Ken barely make it out."},
-  {"id": "phone", "scene": "phone", "text": "Then the phone rings. It's Sonny. He's not calling to ask how you're doing. He wants his money. All of it."},
-  {"id": "ch3", "scene": "chapter", "chapter": "III", "title": "Who Did This?", "text": ""},
-  {"id": "allies", "scene": "allies", "text": "So you start asking around. A colonel with a yacht. A real estate guy in a cowboy hat. And Lance Vance, whose brother died in that same deal. Lance wants revenge too. So you team up."},
-  {"id": "diaz", "scene": "diaz", "text": "Every clue points to one man. Ricardo Diaz. The drug lord who's been paying you to run his errands, while he was the one who robbed you."},
-  {"id": "mansion", "scene": "mansion", "text": "So you and Lance pay Diaz a visit. When the smoke clears, you're the one standing at the top of his stairs. Nice house. It's yours now."},
-  {"id": "ch4", "scene": "chapter", "chapter": "IV", "title": "The Empire", "text": ""},
-  {"id": "empire", "scene": "empire", "text": "And a man with a mansion needs a business plan. A nightclub. A taxi company. A car showroom. A print shop that definitely only prints normal paper. Even an ice cream factory. Every single one pays you, every single day."},
-  {"id": "sonnycall", "scene": "sonnycall", "text": "Sonny calls again. He wants his cut. You tell him no. Very politely. Okay. Not that politely."},
-  {"id": "ch5", "scene": "chapter", "chapter": "V", "title": "Keep Your Friends Close", "text": ""},
-  {"id": "betrayal", "scene": "betrayal", "text": "So Sonny comes to Vice City himself. And he brings a surprise. Lance. Your partner. Your friend. He's been talking to Sonny the whole time."},
-  {"id": "finale", "scene": "finale", "text": "On the steps of your own mansion, you settle it. Both of them. When it's over, it's just you, and Ken, hiding behind a pillar, still sweating."},
-  {"id": "ending", "scene": "ending", "text": "You came to Vice City with nothing but a suitcase and a debt. Now the whole city is yours. Not bad, for a guy who just wanted his money back."},
-  {"id": "outro", "scene": "outro", "text": "So. Would you have trusted Lance? And which character should be born next? Tell me in the comments."}
+ {
+  "id": "hook1",
+  "scene": "hook_pose",
+  "text": "If you were born as Tommy Vercetti, you'd take down eleven men in one night, do fifteen years without giving up a single name, then take over an entire city."
+ },
+ {
+  "id": "hook2",
+  "scene": "hook_list",
+  "text": "And the two people who finally come for you? Your oldest boss... and your best friend."
+ },
+ {
+  "id": "book",
+  "scene": "book",
+  "text": "But right now..."
+ },
+ {
+  "id": "birth",
+  "scene": "baby",
+  "text": "You're born around 1951, in Liberty City. Nobody really knows much about your childhood. Which, honestly, is probably for the best."
+ },
+ {
+  "id": "forelli",
+  "scene": "sonny",
+  "text": "What we do know is this. You grow up and go to work for the Forelli family. Your boss is Sonny Forelli. He smiles a lot. That should worry you."
+ },
+ {
+  "id": "ch1",
+  "scene": "chapter",
+  "chapter": "I",
+  "title": "The Harwood Butcher",
+  "text": ""
+ },
+ {
+  "id": "harwood",
+  "scene": "harwood",
+  "text": "In 1971, Sonny sends you to Harwood to deal with one man. It's a setup. Eleven men are waiting for you. You walk out. They don't."
+ },
+ {
+  "id": "news",
+  "scene": "newspaper",
+  "text": "The newspapers call you the Harwood Butcher. The judge calls it fifteen years."
+ },
+ {
+  "id": "prison",
+  "scene": "prison",
+  "text": "So you sit in a cell. You keep your mouth shut. You never give up a single name. And Sonny? Sonny never visits."
+ },
+ {
+  "id": "ch2",
+  "scene": "chapter",
+  "chapter": "II",
+  "title": "Welcome to Vice City",
+  "text": ""
+ },
+ {
+  "id": "arrive",
+  "scene": "vicecity",
+  "text": "In 1986, you're finally out. Sonny's welcome home present? Get out of town. Fly down to Vice City, watch over a little deal, and keep a low profile."
+ },
+ {
+  "id": "ken",
+  "scene": "ken",
+  "text": "Your new lawyer is Ken Rosenberg. He talks fast, sweats a lot, and he's already nervous. Great sign."
+ },
+ {
+  "id": "deal",
+  "scene": "deal",
+  "text": "The deal goes wrong in about four seconds. Masked men. Gunfire. The money? Gone. The product? Gone. You and Ken barely make it out."
+ },
+ {
+  "id": "phone",
+  "scene": "phone",
+  "text": "Then the phone rings. It's Sonny. He's not calling to ask how you're doing. He wants his money. All of it."
+ },
+ {
+  "id": "ch3",
+  "scene": "chapter",
+  "chapter": "III",
+  "title": "Who Did This?",
+  "text": ""
+ },
+ {
+  "id": "allies",
+  "scene": "allies",
+  "text": "So you start asking around. A colonel with a yacht. A real estate guy in a cowboy hat. And Lance Vance, whose brother died in that same deal. Lance wants revenge too. So you team up."
+ },
+ {
+  "id": "diaz",
+  "scene": "diaz",
+  "text": "Every clue points to one man. Ricardo Diaz. The drug lord who's been paying you to run his errands, while he was the one who robbed you."
+ },
+ {
+  "id": "mansion",
+  "scene": "mansion",
+  "text": "So you and Lance pay Diaz a visit. When the smoke clears, you're the one standing at the top of his stairs. Nice house. It's yours now."
+ },
+ {
+  "id": "ch4",
+  "scene": "chapter",
+  "chapter": "IV",
+  "title": "The Empire",
+  "text": ""
+ },
+ {
+  "id": "empire",
+  "scene": "empire",
+  "text": "And a man with a mansion needs a business plan. A nightclub. A taxi company. A car showroom. A print shop that definitely only prints normal paper. Even an ice cream factory. Every single one pays you, every single day."
+ },
+ {
+  "id": "sonnycall",
+  "scene": "sonnycall",
+  "text": "Sonny calls again. He wants his cut. You tell him no. Very politely. Okay. Not that politely."
+ },
+ {
+  "id": "ch5",
+  "scene": "chapter",
+  "chapter": "V",
+  "title": "Keep Your Friends Close",
+  "text": ""
+ },
+ {
+  "id": "betrayal",
+  "scene": "betrayal",
+  "text": "So Sonny comes to Vice City himself. And he brings a surprise. Lance. Your partner. Your friend. He's been talking to Sonny the whole time."
+ },
+ {
+  "id": "finale",
+  "scene": "finale",
+  "text": "On the steps of your own mansion, you settle it. Both of them. When it's over, it's just you, and Ken, hiding behind a pillar, still sweating."
+ },
+ {
+  "id": "ending",
+  "scene": "ending",
+  "text": "You came to Vice City with nothing but a suitcase and a debt. Now the whole city is yours. Not bad, for a guy who just wanted his money back."
+ },
+ {
+  "id": "outro",
+  "scene": "outro",
+  "text": "So. Would you have trusted Lance? And which character should be born next? Tell me in the comments."
+ }
 ]

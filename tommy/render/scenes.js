@@ -179,52 +179,57 @@ const pp = (t, t0) => t0 === undefined ? 1 : popS(t, t0);
 
 // ---------- scenes ----------
 const SCENES = [
+  // 1. Cold open: "If you were born as..." close-up, then the to-do list struck in sync with the voice
   { id: 'hook1',
-    pops: () => [[0.9], [at('hook1', 'No money')], [at('hook1', 'No friends')], [at('hook1', 'Fifteen')], [at('hook1', 'gone'), 'swish']],
+    pops: () => { const L = hookList(); return [[at('hook1', 'Tommy') + .6], [at('hook1', "you'd take") - .1, 'whoosh'], ...L.flatMap(i => [[i.t0], [i.t1, 'swish']])]; },
     draw(t) {
-      ctx.fillStyle = grad(0, 820, ['#2a0b52', '#5b2a9a', '#c0408f', '#ff8a6a']); ctx.fillRect(-100, -100, W + 200, 1000);
-      for (let i = 0; i < 4; i++) { const x = ((i * 520 + t * 25) % 2400) - 300; ell(x, 140 + i * 40, 160, 40); ctx.fillStyle = 'rgba(255,190,230,.35)'; ctx.fill(); }
-      rr(140, 110, 170, 720, 0); fs('#6a6488'); rr(110, 80, 230, 120, 8); fs('#5a5478'); rr(160, 110, 130, 60, 4); fs('#ffe6a3', 4);
-      ctx.beginPath(); ctx.moveTo(90, 85); ctx.lineTo(225, 20); ctx.lineTo(360, 85); ctx.closePath(); fs('#4a4468');
-      rr(-50, 330, W + 100, 500, 0); fs('#8a86a8');
-      for (let r = 0; r < 8; r++) { const y = 360 + r * 60; line(-50, y, W + 50, y, 3, 'rgba(36,18,46,.22)'); for (let x = (r % 2) * 70; x < W; x += 140) line(x, y, x, y + 60, 3, 'rgba(36,18,46,.22)'); }
-      rr(-50, 300, W + 100, 40, 0); fs('#6f6a90');
-      ctx.beginPath(); for (let x = -50; x < W + 60; x += 30) ctx.lineTo(x, 280 + (x / 30 % 2 ? -14 : 8)); ctx.lineWidth = 3; ctx.strokeStyle = INK; ctx.stroke();
-      rr(720, 380, 480, 70, 8); fs('#3a2a5a'); text('STATE PRISON', 960, 418, '700 44px Fredoka', '#ffd1e3', 'center', 'middle', '6px');
-      rr(780, 470, 360, 360, 0); fs('#1d1530');
-      const open = eout(prog(t, 0, 1));
-      for (const side of [-1, 1]) { ctx.save(); ctx.translate(960 + side * 180, 470); const w = 180 * (1 - open * .75); rr(side < 0 ? 0 : -w, 0, w, 360, 0); fs('#4a4a62'); for (let i = 1; i < 5; i++) { const bx = (side < 0 ? 0 : -w) + i * w / 5; line(bx, 0, bx, 360, 6, '#2a2a42'); } ctx.restore(); }
-      ctx.fillStyle = grad(820, 1080, ['#a89cc0', '#7f739c']); ctx.fillRect(-100, 820, W + 200, 400); line(960, 840, 960, 1080, 10, 'rgba(255,255,255,.5)');
-      const wp = clamp(t / 3.2);
-      const o = { ...TOMMY, x: lerp(960, 640, eio(wp)), y: lerp(860, 990, eio(wp)), s: lerp(.72, .98, eio(wp)), walking: t < 3.2, phase: t * 7.5, shirt: '#ece8df', pants: '#5b606b', mouth: 'flat', suitcase: true, armR: .05, seed: .5 };
-      person(o, t); const ht = headTop(o);
-      pill(t, 0.9, ht.x, ht.y - 50, 'TOMMY VERCETTI', "(that's you)");
-      counter(t, at('hook1', 'No money'), 1420, 200, 'MONEY', '$0');
-      counter(t, at('hook1', 'No friends'), 1690, 330, 'FRIENDS', '0', { rot: .04 });
-      counter(t, at('hook1', 'Fifteen'), 1480, 520, 'YOUR LIFE', '15 YEARS', { col: INK });
-      strike(t, at('hook1', 'gone'), 1340, 570, 1620, PAL.pink);
-      eraTag(t, 'LIBERTY CITY · 1986');
+      const tl = at('hook1', "you'd take") - .1;
+      viceBG(t, 'night', { palms: true });
+      const g = ctx.createRadialGradient(960, 520, 50, 960, 520, 620); g.addColorStop(0, 'rgba(255,45,149,.55)'); g.addColorStop(1, 'rgba(255,45,149,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      person({ ...TOMMY_VC, x: 960, y: 1560, s: 1.75, mouth: 'smirk', brow: 'angry', armL: .1, armR: .1, seed: 1 }, t);
+      pill(t, at('hook1', 'Tommy') + .6, 520, 330, 'TOMMY VERCETTI', "(that's you)", { rot: -.04 });
+      const k = eout(prog(t, tl, .45)); if (k <= 0) return;
+      ctx.save(); ctx.globalAlpha = k; rays(t, '#1a0640', PAL.pink, PAL.purple); ctx.restore();
+      ctx.save(); ctx.translate(0, lerp(1100, 0, k));
+      for (const x of [230, 1690]) { ctx.save(); ctx.shadowColor = PAL.pink; ctx.shadowBlur = 40; ctx.beginPath(); ctx.moveTo(x - 40, 900); ctx.quadraticCurveTo(x - 60, 820 - Math.sin(t * 12) * 10, x, 760 + Math.sin(t * 9) * 12); ctx.quadraticCurveTo(x + 60, 820, x + 40, 900); ctx.closePath(); ctx.fillStyle = PAL.orange; ctx.fill(); ctx.restore(); rr(x - 60, 900, 120, 30, 6); fs('#3a2a5a'); }
+      rr(470, 90, 980, 800, 30); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
+      rr(460, 70, 980, 800, 30); fs('#efe2ff', 6);
+      text("TOMMY'S", 950, 120, '700 30px Fredoka', '#8a5aa8', 'center', 'middle', '8px');
+      text('TO-DO LIST', 950, 180, '700 78px Almendra', INK);
+      line(560, 235, 1340, 235, 4, 'rgba(36,18,46,.4)');
+      hookList().forEach((it, i) => {
+        if (t < it.t0) return; const y = 360 + i * 200, s = popS(t, it.t0);
+        ctx.save(); ctx.translate(560, y); ctx.scale(s, s);
+        ell(50, 0, 50, 50); fs(it.col); text(it.icon, 50, 3, '700 44px Fredoka', '#fff');
+        text(it.label, 130, -12, '700 72px Fredoka', INK, 'left'); text(it.sub, 134, 48, '600 32px Caveat', '#8a5aa8', 'left');
+        ctx.restore();
+        const p = eout(prog(t, it.t1, .35));
+        if (p > 0) { ctx.font = '700 72px Fredoka'; const w = ctx.measureText(it.label).width; line(680, y - 14, 680 + (w + 20) * p, y - 18, 10, '#e0263c'); burst(t, it.t1 + .3, 700 + w, y - 18, 40, PAL.gold); }
+      });
+      ctx.restore();
     } },
+  // 2. Twist: who comes for you
   { id: 'hook2',
-    pops: () => [[at('hook2', 'own an entire')], [at('hook2', 'And all') - .3, 'swish'], [at('hook2', 'And all')], [at('hook2', 'And all') + .25], [at('hook2', 'And all') + .5], [at('hook2', 'money back'), 'swish']],
+    pops: () => [[.2], [.4], [at('hook2', 'oldest boss'), 'stamp'], [at('hook2', 'best friend'), 'stamp'], [at('hook2', 'best friend') + .7, 'swish']],
     draw(t) {
-      viceBG(t, 'sunset', { car: [560, PAL.teal, .85] });
-      person({ ...TOMMY_VC, x: 860, y: 900, s: .95, armL: .18, armR: .18, seed: 1 }, t);
-      counter(t, at('hook2', 'own an entire'), 860, 140, 'CITIES OWNED', '1', { col: PAL.pink });
-      const t0 = at('hook2', 'And all') - .3, sl = eout(prog(t, t0, .5));
-      if (sl > 0) {
-        ctx.save(); ctx.translate(lerp(760, 0, sl), 0); ctx.rotate(-.025);
-        parchment(1220, 280, 600, 560);
-        text("TOMMY'S TO-DO LIST", 1520, 355, '700 50px Almendra', '#b0124f'); line(1290, 390, 1750, 390, 3, 'rgba(176,18,79,.6)');
-        ['Get my money back', 'Find who set me up', 'Take the whole city'].forEach((it, i) => {
-          const tt = at('hook2', 'And all') + i * .25; if (t < tt) return;
-          ctx.save(); ctx.globalAlpha = clamp((t - tt) / .2); rr(1280, 460 + i * 120, 46, 46, 6); fs('#fffaf0', 4); text(it, 1350, 485 + i * 120, '700 52px Caveat', INK, 'left'); ctx.restore();
-        });
-        scribbleCircle(t, at('hook2', 'money back'), 1520, 485, 260, 52, PAL.pink); ctx.restore();
-      }
-      eraTag(t, 'VICE CITY · 1986');
+      rays(t, '#14041e', '#e0263c', PAL.purple);
+      ctx.save(); ctx.globalAlpha = clamp(t / .4);
+      ctx.font = '700 84px Almendra'; const gw = ctx.measureText('Who comes for you?').width;
+      const tg = ctx.createLinearGradient(960 - gw / 2, 0, 960 + gw / 2, 0); tg.addColorStop(0, PAL.gold); tg.addColorStop(.5, PAL.pink); tg.addColorStop(1, PAL.purple);
+      ctx.shadowColor = 'rgba(255,45,149,.7)'; ctx.shadowBlur = 30; text('Who comes for you?', 960, 140, '700 84px Almendra', tg); ctx.restore();
+      [[620, .2, SONNY, 'oldest boss', 'your oldest boss', -.04], [1300, .4, LANCE, 'best friend', 'your best friend', .04]].forEach(([x, t0, who, ph, lab, rot]) => {
+        const s = popS(t, t0); if (s <= 0) return; const shown = t > at('hook2', ph);
+        ctx.save(); ctx.translate(x, 560); ctx.rotate(rot); ctx.scale(s, s);
+        rr(-230, -290, 460, 560, 10); fs(PAL.gold, 6); rr(-200, -260, 400, 440, 4); fs(shown ? '#ffd1e3' : '#2a1640', 4);
+        if (shown) { const r = eout(prog(t, at('hook2', ph), .3)); ctx.save(); rr(-200, -260, 400, 440, 4); ctx.clip(); ctx.globalAlpha = r; person({ ...who, x: 0, y: 420, s: .95, mouth: 'grin', brow: 'angry' }, t); ctx.restore(); rr(-200, -260, 400, 440, 4); fs(null, 4); }
+        else text('?', 0, -40, '700 220px Almendra', 'rgba(255,255,255,.25)');
+        if (shown) text(lab, 0, 228, '700 50px Caveat', INK);
+        if (lab.includes('friend') && t > at('hook2', 'best friend') + .7) { const c = eout(prog(t, at('hook2', 'best friend') + .7, .25)); ctx.beginPath(); ctx.moveTo(-200 * c, -250 * c); ctx.lineTo(-30, -60); ctx.lineTo(20, 10); ctx.lineTo(190 * c, 170 * c); ctx.moveTo(-30, -60); ctx.lineTo(150 * c, -250 * c); ctx.lineWidth = 7; ctx.strokeStyle = '#fff'; ctx.stroke(); }
+        ctx.restore();
+      });
     } },
-  { id: 'book', extra: .4, pops: () => [[1.2], [2.0, 'stamp']], draw: (t) => bookScene(t, 'Prologue', ['The Harwood', 'Butcher'], true) },
+  // 3. "But right now..." rewind into the book
+  { id: 'book', extra: 2.6, pops: () => [[.1, 'whoosh'], [.45, 'swish'], [.75, 'swish'], [1.05, 'swish'], [2.0], [3.0, 'stamp']], draw: t => bookScene(t) },
   { id: 'birth', trans: 'zoom', zoomAt: [1280, 440],
     pops: () => [[.9], [at('birth', 'Nobody'), 'swish'], [at('birth', 'Nobody') + .5], [at('birth', 'probably'), 'stamp']],
     draw(t) {
@@ -567,21 +572,39 @@ function seal(t, t0, x, y) {
   for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, r = 70 + Math.sin(i * 2.7) * 6; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
   ctx.closePath(); fs('#d81b60', 4); ell(0, 0, 50, 50); fs('#a3124a', 3); text('★', 0, 4, '700 54px Fredoka', '#ffe0ef'); ctx.restore();
 }
+function hookList() {
+  return [
+    { icon: '11', label: '11 MEN', sub: '(one night)', col: PAL.pink, t0: at('hook1', 'eleven'), t1: at('hook1', 'do fifteen') - .15 },
+    { icon: '15', label: '15 YEARS', sub: '(zero names given)', col: PAL.purple, t0: at('hook1', 'fifteen'), t1: at('hook1', 'then take') - .15 },
+    { icon: '★', label: 'VICE CITY', sub: '(all of it)', col: PAL.orange, t0: at('hook1', 'take over'), t1: at('hook1', 'entire city') + .5 }];
+}
 function bookScene(t) {
   bookBase(t);
-  ctx.save(); ctx.globalAlpha = clamp((t - .3) / .5);
+  if (t < 1.35) {
+    const a = .6 + .4 * Math.sin(t * 14);
+    ctx.save(); ctx.globalAlpha = a; text('◀◀', 120, 110, '700 70px Fredoka', '#fff'); ctx.restore();
+    for (let i = 0; i < 3; i++) {
+      const p = prog(t, .3 + i * .3, .3); if (p <= 0 || p >= 1) continue;
+      const w = 630 * Math.cos(p * Math.PI);
+      ctx.save(); ctx.beginPath(); ctx.moveTo(960, 180); ctx.lineTo(960 + w, 180 + Math.sin(p * Math.PI) * 30); ctx.lineTo(960 + w, 940 - Math.sin(p * Math.PI) * 30); ctx.lineTo(960, 940); ctx.closePath();
+      fs(p < .5 ? '#f6e8cf' : '#eddcbc', 3); ctx.restore();
+    }
+    return;
+  }
+  const t2 = t - 1.35;
+  ctx.save(); ctx.globalAlpha = clamp(t2 / .5);
   text('Prologue', 645, 320, 'italic 400 48px Almendra', '#8a4a6a');
-  text('The Harwood', 645, 425, '700 84px Almendra', '#3a1030'); text('Butcher', 645, 515, '700 84px Almendra', '#3a1030');
+  text('The Kid from', 645, 425, '700 80px Almendra', '#3a1030'); text('Liberty City', 645, 515, '700 80px Almendra', '#3a1030');
   line(545, 575, 745, 575, 3, '#b07a9a'); ell(645, 575, 8, 8); fs('#b07a9a', 0);
   for (let y = 640; y < 900; y += 46) line(400, y, 890, y, 2, 'rgba(140,80,110,.25)');
   ctx.restore();
-  ctx.save(); ctx.globalAlpha = clamp((t - .8) / .5);
+  ctx.save(); ctx.globalAlpha = clamp((t2 - .5) / .5);
   rr(1090, 270, 380, 320, 6); fs('#f0dcc0', 6);
   ctx.save(); ctx.translate(1280, 470); ctx.scale(.5, .5);
   line(-200, 80, 200, 80, 7, '#8a5a6a'); for (let x = -180; x <= 180; x += 45) line(x, -40, x, 140, 6, '#8a5a6a');
   line(-200, -40, 200, -40, 7, '#8a5a6a'); ctx.beginPath(); ctx.arc(0, -70, 80, 0, Math.PI * 2); ctx.lineWidth = 7; ctx.strokeStyle = '#8a5a6a'; ctx.stroke(); ctx.restore();
   text('you, age 0', 1280, 645, '600 50px Caveat', '#6a3a5a'); ctx.restore();
-  seal(t, 2.0, 1280, 815);
+  seal(t, 3.0, 1280, 815);
 }
 function outroBook(t) {
   bookBase(t);
