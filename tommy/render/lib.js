@@ -36,7 +36,7 @@ function pill(t, t0, x, y, label, sub, o = {}) {
   ctx.font = '600 40px Fredoka'; const w1 = ctx.measureText(label).width;
   let w2 = 0; if (sub) { ctx.font = '500 26px Fredoka'; w2 = ctx.measureText(sub).width; }
   const w = Math.max(w1, w2) + 60, h = sub ? 100 : 68, r = sub ? 28 : 34;
-  rr(-w / 2 + 6, -h / 2 + 9, w, h, r); ctx.fillStyle = o.shadow || 'rgba(255,45,149,.55)'; ctx.fill();
+  rr(-w / 2 + 6, -h / 2 + 9, w, h, r); ctx.fillStyle = o.shadow || (PAL.pink + '8c'); ctx.fill();
   rr(-w / 2, -h / 2, w, h, r); fs(o.bg || '#fffaf0', 5);
   if (sub) { text(label, 0, -15, '600 40px Fredoka', o.fg || INK); text(sub, 0, 26, '500 26px Fredoka', '#8a7766'); }
   else text(label, 0, 3, '600 40px Fredoka', o.fg || INK);
@@ -114,6 +114,9 @@ function hair(style, col) {
   } else if (style === 'short') {
     ctx.moveTo(-64, -6); ctx.bezierCurveTo(-66, -70, -26, -84, 4, -82); ctx.bezierCurveTo(44, -82, 68, -64, 64, -6);
     ctx.bezierCurveTo(50, -40, -50, -40, -64, -6); ctx.closePath(); fs(col);
+  } else if (style === 'long' || style === 'ponytail' || style === 'braid') {
+    ctx.moveTo(-66, 10); ctx.bezierCurveTo(-72, -64, -28, -90, 4, -88); ctx.bezierCurveTo(46, -88, 74, -60, 66, 10);
+    ctx.lineTo(56, -20); ctx.bezierCurveTo(30, -44, 8, -40, 2, -52); ctx.bezierCurveTo(-8, -38, -34, -40, -56, -18); ctx.closePath(); fs(col);
   } else if (style === 'grey') {
     ctx.moveTo(-66, 4); ctx.bezierCurveTo(-70, -50, -40, -70, 0, -70); ctx.bezierCurveTo(40, -70, 70, -50, 66, 4); ctx.lineTo(58, -20); ctx.bezierCurveTo(30, -36, -30, -36, -58, -20); ctx.closePath(); fs(col);
   } else if (style === 'slick') {
@@ -180,6 +183,7 @@ function person(o, t) {
   rr(-22, -515, 44, 45, 10); fs(skin);
   torsoPath(); ctx.fillStyle = o.jacket || o.shirt; ctx.fill();
   if (o.pattern === 'hawaii') { ctx.save(); torsoPath(); ctx.clip(); hawaii(); ctx.restore(); }
+  if (o.pattern === 'plaid') { ctx.save(); torsoPath(); ctx.clip(); ctx.fillStyle = 'rgba(0,0,0,.22)'; for (let x = -100; x < 100; x += 46) ctx.fillRect(x, -500, 18, 300); for (let y = -490; y < -200; y += 46) ctx.fillRect(-100, y, 200, 18); ctx.fillStyle = 'rgba(255,255,255,.18)'; for (let x = -88; x < 100; x += 46) ctx.fillRect(x, -500, 4, 300); ctx.restore(); }
   torsoPath(); fs(null);
   if (o.jacket) {
     ctx.beginPath(); ctx.moveTo(-44, -482); ctx.lineTo(44, -482); ctx.lineTo(0, -330); ctx.closePath(); fs(o.shirt);
@@ -192,6 +196,7 @@ function person(o, t) {
     ctx.beginPath(); ctx.moveTo(-32, -484); ctx.lineTo(-62, -470); ctx.lineTo(-40, -440); ctx.lineTo(0, -425); ctx.closePath(); fs(o.collar || o.shirt, 4);
     ctx.beginPath(); ctx.moveTo(32, -484); ctx.lineTo(62, -470); ctx.lineTo(40, -440); ctx.lineTo(0, -425); ctx.closePath(); fs(o.collar || o.shirt, 4);
   }
+  if (o.backpack) { line(-60, -480, -70, -300, 14, o.backpack); line(60, -480, 70, -300, 14, o.backpack); }
   arm(-1, aL); arm(1, aR);
   if (o.suitcase) {
     const a = aR, hx = 90 + 198 * Math.sin(a), hy = -452 + 198 * Math.cos(a);
@@ -199,6 +204,9 @@ function person(o, t) {
     rr(hx - 70, hy + 14, 140, 100, 12); fs('#8a5a34'); line(hx - 70, hy + 46, hx + 70, hy + 46, 4); rr(hx - 12, hy + 38, 24, 16, 4); fs('#d9b45a', 3);
   }
   ctx.save(); ctx.translate(0, -590); ctx.rotate(o.tilt || 0);
+  if (o.hair === 'long') { ell(0, -24, 82, 84); fs(o.hairCol); rr(-86, -30, 32, 150, 14); fs(o.hairCol); rr(54, -30, 32, 150, 14); fs(o.hairCol); }
+  if (o.hair === 'ponytail') { ctx.beginPath(); ctx.moveTo(40, -50); ctx.quadraticCurveTo(120, -10, 90, 90); ctx.quadraticCurveTo(70, 20, 30, -20); ctx.closePath(); fs(o.hairCol); }
+  if (o.hair === 'braid') { for (let i = 0; i < 6; i++) { ell(58 + i * 4, 10 + i * 30, 18, 20); fs(o.hairCol, 4); } }
   ell(-64, 8, 14, 19); fs(skin); ell(64, 8, 14, 19); fs(skin);
   ell(0, 0, 64, 76); fs(skin);
   if (o.mask) {
@@ -208,6 +216,19 @@ function person(o, t) {
   } else {
     if (o.hair !== 'none') hair(o.hair || 'tommy', o.hairCol || '#3a2418');
     face(o, t);
+  }
+  if (o.beard) {
+    ctx.beginPath(); ctx.moveTo(-64, -4); ctx.quadraticCurveTo(-62, 72, 0, 84); ctx.quadraticCurveTo(62, 72, 64, -4); ctx.lineTo(50, 8);
+    ctx.quadraticCurveTo(34, 30, 20, 34); ctx.quadraticCurveTo(0, 26, -20, 34); ctx.quadraticCurveTo(-34, 30, -50, 8); ctx.closePath(); fs(o.beard, 4);
+    const m = o.mouth || 'flat'; if (m === 'frown') { ctx.beginPath(); ctx.moveTo(-14, 52); ctx.quadraticCurveTo(0, 42, 14, 52); ctx.lineWidth = 5; ctx.strokeStyle = '#f4e6dc'; ctx.stroke(); }
+    else if (m === 'grin' || m === 'smile') { ctx.beginPath(); ctx.moveTo(-18, 44); ctx.quadraticCurveTo(0, 60, 18, 44); ctx.lineWidth = 5; ctx.strokeStyle = '#f4e6dc'; ctx.stroke(); }
+    else line(-14, 48, 14, 48, 5, '#f4e6dc');
+  }
+  if (o.freckles) { ctx.fillStyle = 'rgba(150,80,50,.6)'; for (const [x, y] of [[-40, 20], [-30, 28], [-48, 30], [40, 20], [30, 28], [48, 30]]) { ell(x, y, 3, 3); ctx.fill(); } }
+  if (o.fungus) {
+    const pl = [[-30, -50, 40, 34], [20, -60, 44, 36], [-50, -10, 30, 40], [44, -14, 32, 42], [0, -20, 46, 40], [-14, 20, 30, 24], [24, 16, 28, 26]];
+    for (const [x, y, rx, ry] of pl) { ell(x, y, rx, ry); fs('#c9a86a', 4); ell(x - rx * .2, y - ry * .2, rx * .4, ry * .35); ctx.fillStyle = 'rgba(120,80,40,.35)'; ctx.fill(); }
+    ell(0, 52, 18, 12); fs('#2a1418', 4);
   }
   if (o.mustache) { ctx.beginPath(); ctx.moveTo(-30, 36); ctx.quadraticCurveTo(0, 18, 30, 36); ctx.quadraticCurveTo(0, 30, -30, 36); fs(o.mustache, 3); }
   if (o.glasses) { rr(-48, -18, 40, 28, 8); fs('#1a1030', 4); rr(8, -18, 40, 28, 8); fs('#1a1030', 4); line(-8, -8, 8, -8, 4); line(-40, -12, -24, -12, 3, 'rgba(255,95,176,.8)'); line(16, -12, 32, -12, 3, 'rgba(255,95,176,.8)'); }
@@ -248,7 +269,7 @@ function makeGrain() {
 function finish(c) {
   c.save(); c.globalCompositeOperation = 'overlay'; c.globalAlpha = .18; c.fillStyle = grainPat; c.fillRect(0, 0, W, H); c.restore();
   const v = c.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05);
-  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(45,8,60,.5)'); c.fillStyle = v; c.fillRect(0, 0, W, H);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, PAL.vig || 'rgba(45,8,60,.5)'); c.fillStyle = v; c.fillRect(0, 0, W, H);
 }
 
 // ---------- timeline ----------
