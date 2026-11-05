@@ -158,7 +158,7 @@ const J = [
     draw(t) {
       ruinsBG(t, 'sunset'); const g = ctx.createRadialGradient(960, 520, 50, 960, 520, 620); g.addColorStop(0, 'rgba(240,160,80,.45)'); g.addColorStop(1, 'rgba(240,160,80,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       person({ ...J33, x: 960, y: 1560, s: 1.75, brow: 'angry', seed: 1 }, t);
-      pill(t, at('hook1', 'Joel Miller') + .6, 520, 330, 'JOEL MILLER', "(that's you)", { rot: -.04 });
+      pill(t, at('hook1', 'Joel Miller') + .6, 520, 330, 'JOEL MILLER', "The Last of Us · (that's you)", { rot: -.04 });
       const tl = at('hook1', "you'd lose") - .1, k = eout(prog(t, tl, .45)); if (k <= 0) return;
       ctx.save(); ctx.globalAlpha = k; raysJ(t); ctx.restore(); ctx.save(); ctx.translate(0, lerp(1100, 0, k));
       bigList(t, ["JOEL'S", 'LIFE IN 3 LINES'], [

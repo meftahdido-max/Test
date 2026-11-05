@@ -187,7 +187,7 @@ const SCENES = [
       viceBG(t, 'night', { palms: true });
       const g = ctx.createRadialGradient(960, 520, 50, 960, 520, 620); g.addColorStop(0, 'rgba(255,45,149,.55)'); g.addColorStop(1, 'rgba(255,45,149,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       person({ ...TOMMY_VC, x: 960, y: 1560, s: 1.75, mouth: 'smirk', brow: 'angry', armL: .1, armR: .1, seed: 1 }, t);
-      pill(t, at('hook1', 'Tommy') + .6, 520, 330, 'TOMMY VERCETTI', "(that's you)", { rot: -.04 });
+      pill(t, at('hook1', 'Tommy') + .6, 520, 330, 'TOMMY VERCETTI', "GTA Vice City · (that's you)", { rot: -.04 });
       const k = eout(prog(t, tl, .45)); if (k <= 0) return;
       ctx.save(); ctx.globalAlpha = k; rays(t, '#1a0640', PAL.pink, PAL.purple); ctx.restore();
       ctx.save(); ctx.translate(0, lerp(1100, 0, k));

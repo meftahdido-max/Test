@@ -1,30 +1,114 @@
 [
- {"id": "hook1", "text": "If you were born as Joel Miller, you'd lose your daughter on the worst night in history, spend twenty years refusing to care about anyone, then doom the entire human race, for one kid."},
- {"id": "hook2", "text": "And you'd do it again. You'd just never tell her."},
- {"id": "book", "text": "But right now..."},
- {"id": "dad", "text": "You're a single dad in Austin, Texas. You work construction, you're always tired, and your daughter Sarah is twelve and way smarter than you."},
- {"id": "watch", "text": "It's your birthday. Sarah gives you a watch. She fixed it herself. Mostly. Remember that watch."},
- {"id": "outbreak", "text": "That night, a fungus turns half the world into monsters. You grab Sarah, your brother Tommy grabs the truck, and you almost make it out. A soldier has orders. You make it out. She doesn't."},
- {"id": "ch1", "text": ""},
- {"id": "smuggler", "text": "Twenty years later, you're a smuggler in the Boston quarantine zone. Rough, quiet, allergic to feelings. You still wear the watch. It's still broken."},
- {"id": "ellie", "text": "Then a rebel group called the Fireflies hands you a job. Smuggle one fourteen year old girl across the city. Her name is Ellie. She swears more than you do. And she was bitten three weeks ago. She should be dead."},
- {"id": "tess", "text": "Your partner Tess gets bitten too. She stays behind so you can get away. Now it's just you, and the kid."},
- {"id": "ch2", "text": ""},
- {"id": "road", "text": "So you cross the country with a teenager. She reads you terrible puns from a joke book. You pretend you hate them. Hold that thought."},
- {"id": "tommy", "text": "In Wyoming, you find your brother Tommy. You try to hand Ellie off to him. She tells you everyone she ever cared about either died or left her. So you stay."},
- {"id": "fall", "text": "Then you fall onto a metal bar, and now she's the one keeping you alive. All winter long. She's fourteen."},
- {"id": "giraffe", "text": "In spring, you find giraffes walking through a dead city. For one second, the world isn't over. And when she reads you a pun, you laugh. Out loud. Told you."},
- {"id": "ch3", "text": ""},
- {"id": "hospital", "text": "The Fireflies finally get Ellie. Good news: they can make a cure. Bad news: getting it out of her brain will kill her. And nobody is going to ask her."},
- {"id": "choice", "text": "So you walk through the whole hospital, and you carry her out. The surgeon who stood in your way? He had a daughter too. Remember that."},
- {"id": "lie", "text": "When she wakes up, you lie. You tell her there were others like her, and it didn't work. She asks you to swear. You swear."},
- {"id": "midcta", "text": "Quick pause. Which game character should be born next? Drop a name in the comments. The most liked one is next."},
- {"id": "ch4", "text": ""},
- {"id": "jackson", "text": "Four years later, you live in Jackson. You teach her guitar. You take her to a museum for her birthday, and she tries on an astronaut helmet. Best day ever."},
- {"id": "truth", "text": "Then she goes back to that hospital and finds out the truth. She stops talking to you. For a long time."},
- {"id": "porch", "text": "One night on the porch, she tells you she can't forgive you. But she'd like to try."},
- {"id": "ch5", "text": ""},
- {"id": "abby", "text": "The next day, you help a stranger out of a snowstorm. Her name is Abby. Remember that surgeon with a daughter? That's her. She came a very long way to find you."},
- {"id": "ending", "text": "You lost a daughter, found another one, and chose her over the whole world. Not bad, for a guy who spent twenty years trying not to care."},
- {"id": "outro", "text": "So tell me. Would you have saved Ellie?"}
+ {
+  "id": "hook1",
+  "text": "If you were born as Joel Miller from The Last of Us, you'd lose your daughter on the worst night in history, spend twenty years refusing to care about anyone, then doom the entire human race, for one kid."
+ },
+ {
+  "id": "hook2",
+  "text": "And you'd do it again. You'd just never tell her."
+ },
+ {
+  "id": "book",
+  "text": "But right now..."
+ },
+ {
+  "id": "dad",
+  "text": "You're a single dad in Austin, Texas. You work construction, you're always tired, and your daughter Sarah is twelve and way smarter than you."
+ },
+ {
+  "id": "watch",
+  "text": "It's your birthday. Sarah gives you a watch. She fixed it herself. Mostly. Remember that watch."
+ },
+ {
+  "id": "outbreak",
+  "text": "That night, a fungus turns half the world into monsters. You grab Sarah, your brother Tommy grabs the truck, and you almost make it out. A soldier has orders. You make it out. She doesn't."
+ },
+ {
+  "id": "ch1",
+  "text": ""
+ },
+ {
+  "id": "smuggler",
+  "text": "Twenty years later, you're a smuggler in the Boston quarantine zone. Rough, quiet, allergic to feelings. You still wear the watch. It's still broken."
+ },
+ {
+  "id": "ellie",
+  "text": "Then a rebel group called the Fireflies hands you a job. Smuggle one fourteen year old girl across the city. Her name is Ellie. She swears more than you do. And she was bitten three weeks ago. She should be dead."
+ },
+ {
+  "id": "tess",
+  "text": "Your partner Tess gets bitten too. She stays behind so you can get away. Now it's just you, and the kid."
+ },
+ {
+  "id": "ch2",
+  "text": ""
+ },
+ {
+  "id": "road",
+  "text": "So you cross the country with a teenager. She reads you terrible puns from a joke book. You pretend you hate them. Hold that thought."
+ },
+ {
+  "id": "tommy",
+  "text": "In Wyoming, you find your brother Tommy. You try to hand Ellie off to him. She tells you everyone she ever cared about either died or left her. So you stay."
+ },
+ {
+  "id": "fall",
+  "text": "Then you fall onto a metal bar, and now she's the one keeping you alive. All winter long. She's fourteen."
+ },
+ {
+  "id": "giraffe",
+  "text": "In spring, you find giraffes walking through a dead city. For one second, the world isn't over. And when she reads you a pun, you laugh. Out loud. Told you."
+ },
+ {
+  "id": "ch3",
+  "text": ""
+ },
+ {
+  "id": "hospital",
+  "text": "The Fireflies finally get Ellie. Good news: they can make a cure. Bad news: getting it out of her brain will kill her. And nobody is going to ask her."
+ },
+ {
+  "id": "choice",
+  "text": "So you walk through the whole hospital, and you carry her out. The surgeon who stood in your way? He had a daughter too. Remember that."
+ },
+ {
+  "id": "lie",
+  "text": "When she wakes up, you lie. You tell her there were others like her, and it didn't work. She asks you to swear. You swear."
+ },
+ {
+  "id": "midcta",
+  "text": "Quick pause. Which game character should be born next? Drop a name in the comments. The most liked one is next."
+ },
+ {
+  "id": "ch4",
+  "text": ""
+ },
+ {
+  "id": "jackson",
+  "text": "Four years later, you live in Jackson. You teach her guitar. You take her to a museum for her birthday, and she tries on an astronaut helmet. Best day ever."
+ },
+ {
+  "id": "truth",
+  "text": "Then she goes back to that hospital and finds out the truth. She stops talking to you. For a long time."
+ },
+ {
+  "id": "porch",
+  "text": "One night on the porch, she tells you she can't forgive you. But she'd like to try."
+ },
+ {
+  "id": "ch5",
+  "text": ""
+ },
+ {
+  "id": "abby",
+  "text": "The next day, you help a stranger out of a snowstorm. Her name is Abby. Remember that surgeon with a daughter? That's her. She came a very long way to find you."
+ },
+ {
+  "id": "ending",
+  "text": "You lost a daughter, found another one, and chose her over the whole world. Not bad, for a guy who spent twenty years trying not to care."
+ },
+ {
+  "id": "outro",
+  "text": "So tell me. Would you have saved Ellie?"
+ }
 ]
