@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Fredoka;font-weight:500;src:url(../../tommy/render/fonts/fredoka-latin-500-normal.woff2)}
+@font-face{font-family:Fredoka;font-weight:600;src:url(../../tommy/render/fonts/fredoka-latin-600-normal.woff2)}
+@font-face{font-family:Fredoka;font-weight:700;src:url(../../tommy/render/fonts/fredoka-latin-700-normal.woff2)}
+@font-face{font-family:Almendra;font-weight:700;src:url(../../tommy/render/fonts/almendra-latin-700-normal.woff2)}
+@font-face{font-family:Almendra;font-style:italic;font-weight:400;src:url(../../tommy/render/fonts/almendra-latin-400-italic.woff2)}
+@font-face{font-family:Caveat;font-weight:600;src:url(../../tommy/render/fonts/caveat-latin-600-normal.woff2)}
+@font-face{font-family:Caveat;font-weight:700;src:url(../../tommy/render/fonts/caveat-latin-700-normal.woff2)}
+@font-face{font-family:Pacifico;src:url(../../tommy/render/fonts/pacifico-latin-400-normal.woff2)}
+html,body{margin:0;background:#000}
+canvas{display:block;width:100vw}
+</style></head>
+<body><canvas id="cv" width="1920" height="1080"></canvas>
+<script src="durations.js"></script>
+<script src="../../tommy/render/lib.js"></script>
+<script src="../../tommy/render/scenes.js"></script>
+<script src="../../tommy/render/scenes2.js"></script>
+<script src="cj_scenes.js"></script>
+<script>
+(async()=>{
+  const fonts=['600 40px Fredoka','500 20px Fredoka','700 40px Fredoka','700 40px Almendra','italic 400 40px Almendra','700 40px Caveat','600 40px Caveat','40px Pacifico'];
+  await Promise.all(fonts.map(f=>document.fonts.load(f)));
+  setup();
+  window.READY=true;
+  if(location.hash==='#play'){const t0=performance.now();(function loop(){renderFrame((performance.now()-t0)/1000%TOTAL);requestAnimationFrame(loop)})();}
+})();
+</script>
+</body></html>
