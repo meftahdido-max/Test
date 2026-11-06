@@ -461,3 +461,104 @@ _build_prev2 = build
 
 def build(T, scenes, cfg):
     return build_westdark(T, scenes, cfg) if cfg.get('style') == 'westdark' else _build_prev2(T, scenes, cfg)
+
+
+# ---------------------------------------------------------------------------
+# "west" style — configurable West Coast boom-bap. cfg['variant'] picks one of the presets below
+# (each an original progression/riff): grove, ballas, cruise, tenpenny, boombap.
+def brass(m, dur):
+    n = int((dur + .2) * SR); t = np.arange(n) / SR; out = np.zeros(n)
+    for det in (-.06, .06): out += saw(mtof(m + det), t, 12)
+    seg = n // 5; res = np.zeros(n)
+    for i in range(5):
+        sl = slice(i * seg, (i + 1) * seg if i < 4 else n); res[sl] = lp(out[sl], 900 + 2200 * (1 - i / 5))
+    return np.tanh(res) * np.minimum(1, t / .02) * np.exp(-t * 3)
+
+
+def bell(m, dur):
+    n = int(dur * SR); t = np.arange(n) / SR; f = mtof(m)
+    return np.sin(2 * np.pi * f * t + 2.5 * np.exp(-t * 4) * np.sin(2 * np.pi * f * 3.5 * t)) * np.exp(-t * 2.2) * np.minimum(1, t / .003)
+
+
+def crackle(n):
+    x = np.zeros(n); idx = rng.integers(0, n, n // 900); x[idx] = rng.uniform(-1, 1, len(idx))
+    return hp(x, 1500) * .25 + hp(rng.standard_normal(n), 4000) * .004
+
+
+WEST = {
+    'grove':    {'bpm': 90, 'swing': .08, 'lead': 'synth', 'prog': [([53, 56, 60], 29, 65), ([49, 53, 56], 25, 61), ([46, 49, 53], 22, 58), ([48, 52, 55], 24, 60)],
+                 'riff': [(0, 0), (.5, 0), (1.5, 3), (2, 7), (3, 5), (3.5, 3)], 'kick': [0, 7, 10], 'pad': 'strings'},
+    'ballas':   {'bpm': 84, 'swing': .04, 'lead': 'bell', 'prog': [([48, 51, 55], 24, 72), ([44, 48, 51], 20, 68), ([46, 50, 53], 22, 70), ([43, 47, 50], 19, 67)],
+                 'riff': [(0, 0), (1, 3), (1.5, 2), (2, 0), (3, -2)], 'kick': [0, 3, 8, 11], 'pad': 'strings'},
+    'cruise':   {'bpm': 95, 'swing': .12, 'lead': 'synth', 'prog': [([55, 58, 62, 65], 31, 67), ([53, 57, 60, 64], 29, 65), ([51, 55, 58, 62], 27, 63), ([50, 53, 57, 60], 26, 62)],
+                 'riff': [(0, 0), (.75, 3), (1.5, 5), (2.5, 3), (3, 0)], 'kick': [0, 6, 10], 'pad': 'saw', 'shaker': True},
+    'tenpenny': {'bpm': 86, 'swing': .05, 'lead': 'guitar', 'prog': [([50, 53, 57], 26, 62), ([46, 50, 53], 22, 58), ([48, 51, 55], 24, 60), ([45, 49, 52], 21, 57)],
+                 'riff': [(0, 0), (.5, 7), (1, 12), (1.5, 7), (2, 3), (2.5, 7), (3, 12), (3.5, 10)], 'kick': [0, 10], 'pad': 'strings', 'glide808': True},
+    'boombap':  {'bpm': 92, 'swing': .1, 'lead': 'brass', 'prog': [([57, 60, 64], 33, 69), ([53, 57, 60], 29, 65), ([55, 59, 62], 31, 67), ([52, 56, 59], 28, 64)],
+                 'riff': [(0, 0), (1.75, 0), (2.5, -2), (3, 3)], 'kick': [0, 7, 9], 'pad': 'strings', 'vinyl': True},
+}
+
+
+def build_west(T, scenes, cfg):
+    V = {**WEST[cfg.get('variant', 'grove')], **cfg.get('override', {})}
+    bpm = V['bpm']; beat = 60 / bpm; bar = beat * 4; sw = beat / 4 * V['swing']
+    n = int((T + 4) * SR); keys = np.zeros(n); drums = np.zeros(n); bass = np.zeros(n); lead = np.zeros(n); pts808 = []
+
+    def put(buf, x, t):
+        i = int(t * SR)
+        if i >= len(buf) or i < 0: return
+        m = min(len(x), len(buf) - i); buf[i:i + m] += x[:m]
+
+    def scene_at(t):
+        cur = scenes[0][1]
+        for s, sid in scenes:
+            if s <= t + .05: cur = sid
+        return cur
+
+    s16 = lambda tb, k: tb + k * beat / 4 + (sw if k % 2 else 0)
+    K, S, HC, HO = kick_hard(), snare_big(), hat(), hat(True)
+    for b in range(int(T / bar) + 2):
+        tb = b * bar; lvl = cfg['levels'].get(scene_at(tb), 1); notes, sub, rr_ = V['prog'][b % 4]; var = (b // 4) % 2
+        if V['pad'] == 'strings': put(keys, strings([x + 12 for x in notes], bar + .6) * (.9 if lvl == 0 else .55), tb)
+        else: put(keys, pad_chord([x + 12 for x in notes], bar + .5) * (.6 if lvl == 0 else .4), tb)
+        riff = V['riff'] if var == 0 else V['riff'][:-1] + [(V['riff'][-1][0], V['riff'][-1][1] + 2)]
+        for bt, iv in riff:
+            L = V['lead']
+            if L == 'synth': put(keys, synth_riff(rr_ + iv - 12, .9 * beat) * .5, tb + bt * beat)
+            elif L == 'bell': put(keys, bell(rr_ + iv, 2.0) * .35, tb + bt * beat)
+            elif L == 'guitar': put(keys, guitar(rr_ + iv, 1.6, .5, pos=.2, bright=1.3) * .9, tb + bt * beat)
+            elif L == 'brass' and lvl >= 1: put(keys, brass(rr_ + iv, .35 * beat) * .5, tb + bt * beat)
+        if V['lead'] == 'brass' and lvl == 0: put(keys, bell(rr_ + 12, 2.5) * .25, tb)
+        if lvl >= 1:
+            if V.get('glide808'):
+                pts808 += [(tb, sub + 12, beat * 2.5), (tb + 2.5 * beat, sub + 12 + (7 if var else 5), beat * 1.5)]
+            else:
+                nn = int(bar * SR); tt = np.arange(nn) / SR
+                put(bass, np.tanh(1.4 * np.sin(2 * np.pi * mtof(sub) * tt)) * np.minimum(1, tt / .02) * np.exp(-tt * .5) * .8, tb)
+            for k in (V['kick'] if var == 0 else V['kick'] + [14]): put(drums, K, s16(tb, k))
+            for k in (4, 12): put(drums, S, s16(tb, k))
+            for k in range(0, 16, 1 if lvl >= 2 else 2):
+                if k % 2 == 0 or lvl >= 2: put(drums, HC * (.8 if k % 4 == 2 else .4 if k % 2 else .55), s16(tb, k))
+            if b % 4 == 3: put(drums, HO * .7, s16(tb, 14))
+            if V.get('shaker') and lvl >= 2:
+                for k in range(1, 16, 2): put(drums, hat() * .5, s16(tb, k))
+        if lvl >= 2 and b % 4 in (2, 3) and V['lead'] != 'brass':
+            for bt, iv in ((0, 12), (1.5, 15), (3, 10)):
+                nn = int(1.4 * beat * SR); tt = np.arange(nn) / SR
+                put(lead, lp(saw(mtof(rr_ + iv), tt, 6), 1500) * np.minimum(1, tt / .05) * np.exp(-tt * 1.2) * .25, tb + bt * beat)
+    if pts808: bass += glide_synth(sorted(pts808), T + 4, 'bass')[:n] * .9
+    ir_t = np.arange(int(2.0 * SR)) / SR; ir = rng.standard_normal(len(ir_t)) * np.exp(-ir_t * 2.8); ir /= np.sqrt(np.sum(ir ** 2))
+    wet = fftconvolve(keys + lead + .5 * drums, ir)[:n]
+    out = keys + lead + bass + drums * .95 + .28 * wet
+    if V.get('vinyl'): out = lp(out, 9000) + crackle(n) * np.sqrt(np.mean(out ** 2)) * 3
+    out = hp(out, 28)
+    t_all = np.arange(n) / SR
+    out = (out * np.clip(t_all / 1.5, 0, 1) * np.clip((T - t_all) / 2.0, 0, 1))[:int(T * SR) + SR]
+    return (out / (np.sqrt(np.mean(out ** 2)) + 1e-9)).astype(np.float32)
+
+
+_build_prev3 = build
+
+
+def build(T, scenes, cfg):
+    return build_west(T, scenes, cfg) if cfg.get('style') == 'west' else _build_prev3(T, scenes, cfg)
