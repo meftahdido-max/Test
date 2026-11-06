@@ -3,3 +3,4 @@ tommy/*.mp4
 tommy/audio/trim/
 joel/audio/trim/
 __pycache__/
+*/render/events.json
