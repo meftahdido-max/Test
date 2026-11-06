@@ -376,6 +376,20 @@ def strings(notes, dur):
     return lp(out, 1800) * a / (3 * len(notes))
 
 
+def synth_riff(m, dur):
+    """dark analog-style riff voice: detuned saws through a closing low-pass, short glide-free notes"""
+    n = int((dur + .25) * SR); t = np.arange(n) / SR; out = np.zeros(n)
+    for det in (-.08, .08):
+        out += saw(mtof(m + det), t, 14)
+    out += .6 * np.sin(2 * np.pi * mtof(m - 12) * t)
+    seg = n // 6; res = np.zeros(n)
+    for i in range(6):  # step the filter down = a "wow" closing envelope
+        sl = slice(i * seg, (i + 1) * seg if i < 5 else n)
+        res[sl] = lp(out[sl], 2400 * .62 ** i + 300)
+    gate = np.minimum(1, t / .008) * np.minimum(1, np.maximum(0, dur + .2 - t) / .2)
+    return np.tanh(1.3 * res) * gate
+
+
 def kick_hard():
     t = np.arange(int(.45 * SR)) / SR
     f = 42 + 110 * np.exp(-t * 35)
@@ -419,7 +433,7 @@ def build_westdark(T, scenes, cfg):
         put(keys, strings([x + 12 for x in notes], bar + .6) * (.9 if lvl == 0 else .6), tb)
         riff = WD_RIFF if var == 0 else WD_RIFF[:4] + [(3, 10), (3.5, 7)]
         for bt, iv in riff:  # low piano riff doubled in octaves
-            put(keys, piano(rr_ + iv - 12, 1.4, .55) + piano(rr_ + iv, 1.4, .35), tb + bt * beat)
+            put(keys, synth_riff(rr_ + iv - 12, .9 * beat) * .5, tb + bt * beat)
         if lvl >= 1:
             nn = int(bar * SR); tt = np.arange(nn) / SR; f = mtof(sub)
             sub_ = np.tanh(1.4 * np.sin(2 * np.pi * f * tt)) * np.minimum(1, tt / .02) * np.exp(-tt * .5)
