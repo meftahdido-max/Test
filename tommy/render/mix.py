@@ -1,4 +1,4 @@
-"""Mix voiceover clips, a synth music bed and SFX using render/events.json.
+"""Mix voiceover clips, the generated score (music.py, shaped by render/music.json) and SFX using render/events.json.
 Usage: python3 mix.py <audio_dir> <events.json> <out.wav>"""
 import json, os, subprocess, sys, wave
 import numpy as np
@@ -67,40 +67,32 @@ def ding():
 # sound effects sit well under the voice (was a flat 0.7)
 SFX_GAIN = {"pop": .18, "swish": .16, "whoosh": .14, "stamp": .22, "ding": .2}
 SFX = {"pop": pop, "swish": swish, "whoosh": whoosh, "stamp": stamp, "ding": ding}
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import music as score
+
+VOICE_RMS = 10 ** (-19 / 20)  # every clip brought to the same loudness so no line sounds faded
+scenes = []
 for e in info["ev"]:
     if e["type"] == "voice":
         trimmed = f"{audio_dir}/trim/{e['id']}.wav"
-        add(voice, load(trimmed if os.path.exists(trimmed) else f"{audio_dir}/{e['id']}.mp3"), e["t"])
+        clip = load(trimmed if os.path.exists(trimmed) else f"{audio_dir}/{e['id']}.mp3")
+        loud = clip[np.abs(clip) > .02]
+        if len(loud): clip = clip * (VOICE_RMS / np.sqrt(np.mean(loud ** 2)))
+        add(voice, clip, e["t"])
+    elif e["type"] == "scene":
+        scenes.append((e["t"], e["id"]))
     else:
         add(sfx, SFX[e["type"]](), e["t"], SFX_GAIN.get(e["type"], .2))
 
-# 80s synth pad: Am - F - C - G, 4 s per chord, soft saw + pulsing bass
-chords = [[57, 60, 64], [53, 57, 60], [48, 55, 60], [55, 59, 62]]
-music = np.zeros(n, np.float32)
-cd = 4.0
-t_all = np.arange(n) / SR
-for k in range(int(T / cd) + 2):
-    ch = chords[k % 4]; s, e = int(k * cd * SR), min(n, int((k + 1) * cd * SR + .6 * SR))
-    if s >= n: break
-    t = t_all[s:e] - k * cd
-    env = np.clip(t / .8, 0, 1) * np.clip((cd + .6 - t) / .6, 0, 1)
-    seg = np.zeros(e - s)
-    for note in ch:
-        f = 440 * 2 ** ((note - 69) / 12)
-        for h in range(1, 6):
-            seg += np.sin(2 * np.pi * f * h * t * (1 + .002 * (h % 2))) / h ** 1.6
-    bf = 440 * 2 ** ((ch[0] - 24 - 69) / 12)
-    pulse = (np.sin(2 * np.pi * 100 / 60 * 2 * t) > 0) * np.exp(-((t * 100 / 60 * 2) % 1) * 3)
-    seg = seg * .06 * env + np.sin(2 * np.pi * bf * t) * .18 * pulse * env
-    music[s:e] += seg.astype(np.float32)
-music *= .55
-fade = np.clip(t_all / 1.5, 0, 1) * np.clip((T - t_all) / 1.5, 0, 1)
-music *= fade
+cfg_path = os.path.join(os.path.dirname(ev_path), "music.json")
+cfg = json.load(open(cfg_path)) if os.path.exists(cfg_path) else {"levels": {}}
+music = score.build(T, sorted(scenes) or [(0, "")], cfg)[:n]
+music = np.pad(music, (0, n - len(music))) * 10 ** (cfg.get("db", -27) / 20)
 
-# duck music under voice
+# duck music under the voice
 env = np.convolve(np.abs(voice), np.ones(4410) / 4410, mode="same")
-duck = 1 - .45 * np.clip(env / .05, 0, 1)
-mix = voice * 1.0 + music * duck + sfx
+duck = 1 - .5 * np.clip(env / .04, 0, 1)
+mix = voice + music * duck + sfx
 mix /= max(1.0, np.abs(mix).max() / .95)
 with wave.open(out, "wb") as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)

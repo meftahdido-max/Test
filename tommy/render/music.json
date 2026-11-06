@@ -1,0 +1,6 @@
+{"bpm": 120, "db": -27,
+ "levels": {"hook1": 1, "hook2": 2, "book": 0, "birth": 0, "forelli": 1, "ch1": 0, "harwood": 2, "news": 1, "prison": 0,
+            "ch2": 1, "arrive": 2, "ken": 1, "deal": 2, "phone": 1, "ch3": 1, "allies": 2, "gangs": 2, "lance": 1, "diaz": 1,
+            "mansion": 2, "midcta": 0, "ch4": 1, "empire": 2, "heist": 2, "sonnycall": 1, "ch5": 0, "betrayal": 1, "finale": 2,
+            "ending": 1, "outro": 0},
+ "minor": ["hook2", "harwood", "news", "prison", "deal", "phone", "diaz", "ch5", "betrayal", "finale"]}

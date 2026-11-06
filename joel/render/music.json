@@ -1,0 +1,5 @@
+{"bpm": 112, "db": -28,
+ "levels": {"hook1": 1, "hook2": 0, "book": 0, "dad": 0, "watch": 0, "outbreak": 2, "ch1": 0, "smuggler": 1, "ellie": 1, "tess": 2,
+            "ch2": 0, "road": 1, "tommy": 1, "fall": 0, "giraffe": 1, "ch3": 0, "hospital": 1, "choice": 2, "lie": 0, "midcta": 0,
+            "ch4": 0, "jackson": 1, "truth": 0, "porch": 0, "ch5": 0, "abby": 1, "ending": 1, "outro": 0},
+ "minor": ["outbreak", "tess", "fall", "hospital", "choice", "lie", "truth", "abby"]}

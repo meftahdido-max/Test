@@ -291,6 +291,7 @@ function setup() {
   }
   TOTAL = t + 0.6;
   TL.forEach((sc, i) => {
+    EVENTS.push({ type: 'scene', id: sc.id, t: sc.start });
     if (sc.id && DUR[sc.id]) EVENTS.push({ type: 'voice', id: sc.id, t: sc.start + PRE - (LEAD[sc.id] || 0) });
     (sc.pops ? sc.pops() : []).forEach(p => EVENTS.push({ type: p[1] || 'pop', t: sc.start + p[0] }));
     if (i > 0) EVENTS.push({ type: 'whoosh', t: sc.start - TR * .7 });

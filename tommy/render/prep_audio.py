@@ -8,7 +8,10 @@ script = json.load(open(os.path.join(proj, "script.json")))
 os.makedirs(os.path.join(proj, "audio", "trim"), exist_ok=True)
 # silenceremove at the start, then reverse + remove + reverse to trim the tail; keep 40 ms so words aren't clipped
 flt = ("silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.04,"
-       "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.06,areverse")
+       "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.06,areverse,"
+       # clarity: cut rumble and mud, lift presence, gentle compression so the voice sits forward
+       "highpass=f=70,equalizer=f=250:t=q:w=1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=3,"
+       "acompressor=threshold=-22dB:ratio=3:attack=5:release=90:makeup=2")
 dur = {}
 for x in script:
     if not x["text"]:
