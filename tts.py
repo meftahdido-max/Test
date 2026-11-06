@@ -15,6 +15,10 @@ VOICE = {
 }
 
 proj = sys.argv[1]
+# a project can pick its own narrator with <project>/voice.json (same keys as VOICE)
+vp = os.path.join(proj, "voice.json")
+if os.path.exists(vp):
+    VOICE = {**VOICE, **json.load(open(vp))}
 redo = "--all" in sys.argv
 script = json.load(open(os.path.join(proj, "script.json")))
 todo = [x for x in script if x["text"] and (redo or not os.path.exists(os.path.join(proj, "audio", f"{x['id']}.mp3")))]

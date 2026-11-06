@@ -1,3 +1,16 @@
-{"style": "gfunk", "bpm": 94, "db": -26,
- "levels": {"hook1": 2, "hook2": 1, "book": 0, "grove": 1, "home": 2},
- "minor": ["hook2", "home"]}
+{
+ "style": "westdark",
+ "bpm": 88,
+ "db": -25,
+ "levels": {
+  "hook1": 2,
+  "hook2": 1,
+  "book": 0,
+  "grove": 1,
+  "home": 2
+ },
+ "minor": [
+  "hook2",
+  "home"
+ ]
+}

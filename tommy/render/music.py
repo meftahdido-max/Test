@@ -359,3 +359,91 @@ _build_prev = build
 
 def build(T, scenes, cfg):
     return build_gfunk(T, scenes, cfg) if cfg.get('style') == 'gfunk' else _build_prev(T, scenes, cfg)
+
+
+# ---------------------------------------------------------------------------
+# "westdark" style — slow, heavy, ominous West Coast instrumental: hard boom-bap drums with a
+# roomy snare, dark minor piano riff, string swells, deep steady sub bass, sparse dark synth line.
+# Original riff and progression; no existing song used.
+def strings(notes, dur):
+    n = int(dur * SR); t = np.arange(n) / SR; out = np.zeros(n)
+    for m in notes:
+        for det in (-.1, 0, .1):
+            f = mtof(m + det) * (1 + .003 * np.sin(2 * np.pi * 5.3 * t + m))
+            ph = 2 * np.pi * np.cumsum(f) / SR
+            for h in range(1, 7): out += np.sin(h * ph) / h ** 1.3
+    a = np.minimum(1, t / (dur * .45)) * np.minimum(1, (dur - t) / .4)
+    return lp(out, 1800) * a / (3 * len(notes))
+
+
+def kick_hard():
+    t = np.arange(int(.45 * SR)) / SR
+    f = 42 + 110 * np.exp(-t * 35)
+    body = np.tanh(2.2 * np.sin(2 * np.pi * np.cumsum(f) / SR)) * np.exp(-t * 6.5)
+    click = hp(rng.standard_normal(len(t)), 3000) * np.exp(-t * 300) * .3
+    return body + click
+
+
+def snare_big():
+    t = np.arange(int(.5 * SR)) / SR
+    body = np.sin(2 * np.pi * 180 * t) * np.exp(-t * 22) * .7
+    x = lfilter(*butter(2, [1500 / (SR / 2), 8000 / (SR / 2)], 'band'), rng.standard_normal(len(t))) * np.exp(-t * 11)
+    return np.tanh(1.5 * (body + x)) * .8
+
+
+WD = [([53, 56, 60], 29, 65), ([49, 53, 56, 60], 25, 61), ([46, 49, 53], 22, 58), ([48, 52, 55, 58], 24, 60)]   # Fm  Dbmaj7  Bbm  C7 (chord, sub root, riff root)
+WD_RIFF = [(0, 0), (.5, 0), (1.5, 3), (2, 7), (3, 5), (3.5, 3)]  # beats, semitones over the riff root — original pattern
+
+
+def build_westdark(T, scenes, cfg):
+    bpm = cfg.get('bpm', 88); beat = 60 / bpm; bar = beat * 4; sw = beat / 4 * .06
+    n = int((T + 4) * SR); keys = np.zeros(n); drums = np.zeros(n); bass = np.zeros(n); lead = np.zeros(n)
+
+    def put(buf, x, t):
+        i = int(t * SR)
+        if i >= len(buf) or i < 0: return
+        m = min(len(x), len(buf) - i); buf[i:i + m] += x[:m]
+
+    def scene_at(t):
+        cur = scenes[0][1]
+        for s, sid in scenes:
+            if s <= t + .05: cur = sid
+        return cur
+
+    s16 = lambda tb, k: tb + k * beat / 4 + (sw if k % 2 else 0)
+    K, S, HC, HO = kick_hard(), snare_big(), hat(), hat(True)
+    nbars = int(T / bar) + 2
+    for b in range(nbars):
+        tb = b * bar; sid = scene_at(tb); lvl = cfg['levels'].get(sid, 1)
+        notes, sub, rr_ = WD[b % 4]; var = (b // 4) % 2
+        put(keys, strings([x + 12 for x in notes], bar + .6) * (.9 if lvl == 0 else .6), tb)
+        riff = WD_RIFF if var == 0 else WD_RIFF[:4] + [(3, 10), (3.5, 7)]
+        for bt, iv in riff:  # low piano riff doubled in octaves
+            put(keys, piano(rr_ + iv - 12, 1.4, .55) + piano(rr_ + iv, 1.4, .35), tb + bt * beat)
+        if lvl >= 1:
+            nn = int(bar * SR); tt = np.arange(nn) / SR; f = mtof(sub)
+            sub_ = np.tanh(1.4 * np.sin(2 * np.pi * f * tt)) * np.minimum(1, tt / .02) * np.exp(-tt * .5)
+            put(bass, sub_ * .8, tb)
+            for k in ([0, 7, 10] if var == 0 else [0, 3, 10, 11]): put(drums, K, s16(tb, k))
+            for k in (4, 12): put(drums, S, s16(tb, k))
+            for k in range(0, 16, 2): put(drums, HC * (.8 if k % 4 == 2 else .5), s16(tb, k))
+            if b % 4 == 3: put(drums, HO * .7, s16(tb, 14))
+        if lvl >= 2 and b % 4 in (2, 3):  # sparse dark synth line on the back half of each phrase
+            for bt, iv in ((0, 12), (1.5, 15), (3, 10)):
+                nn = int(1.4 * beat * SR); tt = np.arange(nn) / SR
+                put(lead, lp(saw(mtof(rr_ + iv), tt, 6), 1500) * np.minimum(1, tt / .05) * np.exp(-tt * 1.2) * .3, tb + bt * beat)
+    ir_t = np.arange(int(2.2 * SR)) / SR; ir = rng.standard_normal(len(ir_t)) * np.exp(-ir_t * 2.6); ir /= np.sqrt(np.sum(ir ** 2))
+    wet = fftconvolve(keys + lead + .6 * drums, ir)[:n]
+    out = keys + lead + bass + drums * .95 + .3 * wet
+    out = hp(out, 28)
+    t_all = np.arange(n) / SR
+    fade = np.clip(t_all / 1.5, 0, 1) * np.clip((T - t_all) / 2.0, 0, 1)
+    out = (out * fade)[:int(T * SR) + SR]
+    return (out / (np.sqrt(np.mean(out ** 2)) + 1e-9)).astype(np.float32)
+
+
+_build_prev2 = build
+
+
+def build(T, scenes, cfg):
+    return build_westdark(T, scenes, cfg) if cfg.get('style') == 'westdark' else _build_prev2(T, scenes, cfg)
