@@ -84,7 +84,7 @@ const STORY = [
         stampText(t, at('train', 'turf wars'), 960, 200, 'TURF WARS', .9); eraTag(t, 'LOS SANTOS · 1992'); return;
       }
       desertBG(t); tracks(860); train(lerp(1600, 2400, clamp((t - tc) / 6)), 860, 1);
-      const bx = 700 + Math.sin(t * 2) * 30; bmx(bx, 1020, .8, t); person({ ...CJ, x: bx, y: 900, s: .8, mouth: 'frown', brow: 'angry', seed: 1 }, t);
+      const bx = 700 + Math.sin(t * 2) * 30; bmxRider(CJ, bx, 1020, .8, t, false, { mouth: 'frown', brow: 'angry', seed: 1 });
       person({ ...SMOKE, x: 260, y: 1000, s: .85, mouth: 'grin', brow: 'angry', seed: 4 }, t);
       bubble(t, at('train', 'yelling'), 470, 420, 'FOLLOW THE TRAIN, CJ!', {});
       eraTag(t, 'THE TRAIN · AGAIN');

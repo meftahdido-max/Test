@@ -157,8 +157,8 @@ const CJS = [
       }
       groveBG(t, 'ballas');
       const ride = clamp((t - at('home', 'With a bike')) / 2.5), bx = lerp(1250, 560, eio(ride));
-      if (t > at('home', 'With a bike')) bmx(bx, 1000, .95, t, true);
-      person({ ...CJ, x: t > at('home', 'With a bike') ? bx : 1250, y: t > at('home', 'With a bike') ? 860 : 1000, s: .95, brow: 'angry', mouth: 'flat', seed: 1 }, t);
+      if (t > at('home', 'With a bike')) bmxRider(CJ, bx, 1000, .95, t, true, { brow: 'angry', mouth: 'flat', seed: 1 });
+      else person({ ...CJ, x: 1250, y: 1000, s: .95, brow: 'angry', mouth: 'flat', seed: 1 }, t);
       pill(t, td + .1, 960, 160, 'ENEMY TERRITORY', 'purple. very purple.');
       bubble(t, at('home', 'With a bike') + .2, bx + 120, 280, 'Ah sh*t, here we go again.', { left: false });
       memoryBoard(t, at('home', 'Remember Tenpenny') - .3, 0, 0, { tNew: at('home', 'Remember Tenpenny') + .1 });
@@ -167,3 +167,14 @@ const CJS = [
 ];
 // (full story scenes are appended in cj_story.js)
 SCENES.length = 0; SCENES.push(...CJS);
+
+// CJ actually riding the BMX: seated on the saddle, legs pedalling with the crank, hands on the bars
+function bmxRider(who, x, y, s, t, flip, extra = {}) {
+  const d = flip ? -1 : 1, a = t * 8;
+  bmx(x, y, s, t, flip);
+  const seatX = x - d * 40 * s, seatY = y - 181 * s, p = s * .9;
+  ctx.save(); ctx.translate(seatX, seatY + 235 * p * .62); ctx.rotate(d * .18);
+  person({ ...who, x: 0, y: 0, s: p, legScale: .5, legL: .25 + Math.sin(a) * .35, legR: -.25 + Math.sin(a + Math.PI) * .35,
+           armL: flip ? .85 : -.75, armR: flip ? -.75 : .85, ...extra }, t);
+  ctx.restore();
+}

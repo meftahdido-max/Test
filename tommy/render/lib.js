@@ -171,8 +171,9 @@ function person(o, t) {
   const skin = o.skin || '#e9b48e';
   ctx.save(); ell(0, 0, 120, 18); ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fill(); ctx.restore();
   ctx.translate(0, bob);
-  const leg = (sx, a) => { ctx.save(); ctx.translate(sx, -235); ctx.rotate(a); rr(-25, -10, 50, 228, 18); fs(o.pants || '#3d5a8a'); ell(8, 222, 42, 20); fs(o.shoes || '#2b2220'); ctx.restore(); };
-  leg(-33, sw * .3); leg(33, -sw * .3);
+  const LS = o.legScale || 1;  // < 1 = bent/seated legs (e.g. riding a bike)
+  const leg = (sx, a) => { ctx.save(); ctx.translate(sx, -235); ctx.rotate(a); rr(-25, -10, 50, 228 * LS, 18); fs(o.pants || '#3d5a8a'); ell(8, 222 * LS, 42, 20); fs(o.shoes || '#2b2220'); ctx.restore(); };
+  leg(-33, o.legL ?? sw * .3); leg(33, o.legR ?? -sw * .3);
   const arm = (side, a) => {
     ctx.save(); ctx.translate(side * 90, -452); ctx.rotate(-side * a);
     rr(-21, -8, 42, 192, 20); fs(skin);
