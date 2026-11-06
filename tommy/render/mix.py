@@ -1,6 +1,6 @@
 """Mix voiceover clips, a synth music bed and SFX using render/events.json.
 Usage: python3 mix.py <audio_dir> <events.json> <out.wav>"""
-import json, subprocess, sys, wave
+import json, os, subprocess, sys, wave
 import numpy as np
 
 SR = 44100
@@ -64,12 +64,15 @@ def ding():
     return ((np.sin(2 * np.pi * 2093 * t) + .5 * np.sin(2 * np.pi * 3136 * t)) * np.exp(-t * 6) * .18).astype(np.float32)
 
 
+# sound effects sit well under the voice (was a flat 0.7)
+SFX_GAIN = {"pop": .18, "swish": .16, "whoosh": .14, "stamp": .22, "ding": .2}
 SFX = {"pop": pop, "swish": swish, "whoosh": whoosh, "stamp": stamp, "ding": ding}
 for e in info["ev"]:
     if e["type"] == "voice":
-        add(voice, load(f"{audio_dir}/{e['id']}.mp3"), e["t"])
+        trimmed = f"{audio_dir}/trim/{e['id']}.wav"
+        add(voice, load(trimmed if os.path.exists(trimmed) else f"{audio_dir}/{e['id']}.mp3"), e["t"])
     else:
-        add(sfx, SFX[e["type"]](), e["t"], .7)
+        add(sfx, SFX[e["type"]](), e["t"], SFX_GAIN.get(e["type"], .2))
 
 # 80s synth pad: Am - F - C - G, 4 s per chord, soft saw + pulsing bass
 chords = [[57, 60, 64], [53, 57, 60], [48, 55, 60], [55, 59, 62]]

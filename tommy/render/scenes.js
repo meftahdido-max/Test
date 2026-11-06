@@ -229,7 +229,7 @@ const SCENES = [
       });
     } },
   // 3. "But right now..." rewind into the book
-  { id: 'book', extra: 2.6, pops: () => [[.1, 'whoosh'], [.45, 'swish'], [.75, 'swish'], [1.05, 'swish'], [2.0], [3.0, 'stamp']], draw: t => bookScene(t) },
+  { id: 'book', extra: 1.5, pops: () => [[.1, 'whoosh'], [.45, 'swish'], [.75, 'swish'], [1.05, 'swish'], [1.6], [2.2, 'stamp']], draw: t => bookScene(t) },
   { id: 'birth', trans: 'zoom', zoomAt: [1280, 440],
     pops: () => [[.9], [at('birth', 'Nobody'), 'swish'], [at('birth', 'Nobody') + .5], [at('birth', 'probably'), 'stamp']],
     draw(t) {
@@ -276,7 +276,7 @@ const SCENES = [
       bubble(t, at('forelli', 'worry') + .1, tt.x + 120, tt.y + 10, '...');
       eraTag(t, 'LIBERTY CITY · 1960s');
     } },
-  { id: 'ch1', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'I', 'The Harwood Butcher') },
+  { id: 'ch1', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'I', 'The Harwood Butcher') },
   { id: 'harwood',
     pops: () => [[at('harwood', 'Harwood')], [at('harwood', 'setup'), 'stamp'], ...Array.from({ length: 11 }, (_, i) => [at('harwood', 'Eleven') + i * .07]), [at('harwood', 'You walk out'), 'whoosh'], [at('harwood', "They don't")]],
     draw(t) {
@@ -323,7 +323,7 @@ const SCENES = [
       counter(t, at('prison', 'never give up'), 520, 760, 'NAMES GIVEN', '0', { col: PAL.teal });
       counter(t, at('prison', 'Sonny never'), 1500, 820, 'VISITS FROM SONNY', '0');
     } },
-  { id: 'ch2', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'II', 'Welcome to Vice City') },
+  { id: 'ch2', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'II', 'Welcome to Vice City') },
   { id: 'arrive',
     pops: () => [[at('arrive', 'Vice City')], [at('arrive', 'watch over')], [at('arrive', 'low profile')]],
     draw(t) {
@@ -384,7 +384,7 @@ const SCENES = [
       pill(t, at('phone', "It's Sonny"), 1420, 200, 'SONNY', 'calling from Liberty City');
       bubble(t, at('phone', 'He wants'), 1120, 290, 'MY MONEY. ALL OF IT.', { left: true });
     } },
-  { id: 'ch3', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'III', 'Who Did This?') },
+  { id: 'ch3', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'III', 'Who Did This?') },
   { id: 'allies',
     pops: () => [[.6, 'swish'], [1.8, 'stamp'], [at('allies', 'colonel')], [at('allies', 'real estate')], [at('allies', 'Lance Vance')], [at('allies', 'team up'), 'ding']],
     draw(t) {
@@ -440,7 +440,7 @@ const SCENES = [
       stampText(t, at('mansion', "It's yours"), 520, 260, 'YOURS NOW');
       eraTag(t, 'DIAZ MANSION · 1986');
     } },
-  { id: 'ch4', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'IV', 'The Empire') },
+  { id: 'ch4', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'IV', 'The Empire') },
   { id: 'empire',
     pops: () => [[at('empire', 'nightclub')], [at('empire', 'taxi')], [at('empire', 'car showroom')], [at('empire', 'print shop')], [at('empire', 'ice cream')], [at('empire', 'Every single'), 'ding']],
     draw(t) {
@@ -471,7 +471,7 @@ const SCENES = [
       if (t < at('sonnycall', 'Not that')) bubble(t, at('sonnycall', 'You tell'), 700, 250, 'No, thank you.');
       else bubble(t, at('sonnycall', 'Not that'), 700, 250, '#@$%&!');
     } },
-  { id: 'ch5', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'V', 'Keep Your Friends Close') },
+  { id: 'ch5', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterCard(t, 'V', 'Keep Your Friends Close') },
   { id: 'betrayal',
     pops: () => [[at('betrayal', 'Sonny comes')], [at('betrayal', 'surprise'), 'ding'], [at('betrayal', 'Lance.')], [at('betrayal', 'talking to Sonny'), 'stamp']],
     draw(t) {
@@ -524,7 +524,7 @@ const SCENES = [
       pill(t, at('ending', 'Not bad'), 1360, 860, 'NOT BAD', 'for a guy who wanted his money back', { bg: PAL.mint });
       eraTag(t, 'VICE CITY · 1986');
     } },
-  { id: 'outro', extra: 2.5, pops: () => [[.4], [1.4, 'stamp']], draw: t => outroBook(t) },
+  { id: 'outro', extra: 1.8, pops: () => [[.4], [1.4, 'stamp']], draw: t => outroBook(t) },
 ];
 
 // ---------- extra pieces used above ----------
@@ -580,7 +580,7 @@ function hookList() {
 }
 function bookScene(t) {
   bookBase(t);
-  if (t < 1.35) {
+  if (t < 1.1) {
     const a = .6 + .4 * Math.sin(t * 14);
     ctx.save(); ctx.globalAlpha = a; text('◀◀', 120, 110, '700 70px Fredoka', '#fff'); ctx.restore();
     for (let i = 0; i < 3; i++) {
@@ -591,7 +591,7 @@ function bookScene(t) {
     }
     return;
   }
-  const t2 = t - 1.35;
+  const t2 = t - 1.1;
   ctx.save(); ctx.globalAlpha = clamp(t2 / .5);
   text('Prologue', 645, 320, 'italic 400 48px Almendra', '#8a4a6a');
   text('The Kid from', 645, 425, '700 80px Almendra', '#3a1030'); text('Liberty City', 645, 515, '700 80px Almendra', '#3a1030');
@@ -604,7 +604,7 @@ function bookScene(t) {
   line(-200, 80, 200, 80, 7, '#8a5a6a'); for (let x = -180; x <= 180; x += 45) line(x, -40, x, 140, 6, '#8a5a6a');
   line(-200, -40, 200, -40, 7, '#8a5a6a'); ctx.beginPath(); ctx.arc(0, -70, 80, 0, Math.PI * 2); ctx.lineWidth = 7; ctx.strokeStyle = '#8a5a6a'; ctx.stroke(); ctx.restore();
   text('you, age 0', 1280, 645, '600 50px Caveat', '#6a3a5a'); ctx.restore();
-  seal(t, 3.0, 1280, 815);
+  seal(t, 2.2, 1280, 815);
 }
 function outroBook(t) {
   bookBase(t);

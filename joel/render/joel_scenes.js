@@ -135,14 +135,14 @@ function bookJ(t, prologue, picture, outro) {
     text('Unofficial fan work. Not affiliated with or endorsed by Naughty Dog or Sony Interactive Entertainment.', 960, 1050, '500 20px Fredoka', 'rgba(255,255,255,.6)');
     return;
   }
-  if (t < 1.35) { ctx.save(); ctx.globalAlpha = .6 + .4 * Math.sin(t * 14); text('◀◀', 120, 110, '700 70px Fredoka', '#fff'); ctx.restore();
+  if (t < 1.1) { ctx.save(); ctx.globalAlpha = .6 + .4 * Math.sin(t * 14); text('◀◀', 120, 110, '700 70px Fredoka', '#fff'); ctx.restore();
     for (let i = 0; i < 3; i++) { const p = prog(t, .3 + i * .3, .3); if (p <= 0 || p >= 1) continue; const w = 630 * Math.cos(p * Math.PI); ctx.beginPath(); ctx.moveTo(960, 180); ctx.lineTo(960 + w, 180 + Math.sin(p * Math.PI) * 30); ctx.lineTo(960 + w, 940 - Math.sin(p * Math.PI) * 30); ctx.lineTo(960, 940); ctx.closePath(); fs(p < .5 ? '#f3e6c8' : '#e8d8b4', 3); } return; }
-  const t2 = t - 1.35; ctx.save(); ctx.globalAlpha = clamp(t2 / .5);
+  const t2 = t - 1.1; ctx.save(); ctx.globalAlpha = clamp(t2 / .5);
   text('Prologue', 645, 320, 'italic 400 48px Almendra', '#7a5a3a'); text(prologue[0], 645, 425, '700 80px Almendra', '#2a1a10'); text(prologue[1], 645, 515, '700 80px Almendra', '#2a1a10');
   line(545, 575, 745, 575, 3, '#a08060'); for (let y = 640; y < 900; y += 46) line(400, y, 890, y, 2, 'rgba(120,90,60,.25)'); ctx.restore();
   ctx.save(); ctx.globalAlpha = clamp((t2 - .5) / .5); rr(1090, 270, 380, 320, 6); fs('#ecdcbc', 6);
   ctx.save(); rr(1090, 270, 380, 320, 6); ctx.clip(); ctx.filter = 'sepia(1)'; picture(t); ctx.filter = 'none'; ctx.restore();
-  text('you, 2013', 1280, 645, '600 50px Caveat', '#5a3a2a'); ctx.restore(); seal(t, 3.0, 1280, 815);
+  text('you, 2013', 1280, 645, '600 50px Caveat', '#5a3a2a'); ctx.restore(); seal(t, 2.2, 1280, 815);
 }
 function bigList(t, title, items) {
   rr(470, 90, 980, 800, 30); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill(); rr(460, 70, 980, 800, 30); fs('#f3e6c8', 6);
@@ -175,7 +175,7 @@ const J = [
       pill(t, at('hook2', 'do it again'), 760, 180, "YOU'D DO IT AGAIN", null, { rot: -.03 });
       stampText(t, at('hook2', 'never tell'), 1180, 260, 'NEVER TELL HER');
     } },
-  { id: 'book', extra: 2.6, pops: () => [[.1, 'whoosh'], [.45, 'swish'], [.75, 'swish'], [1.05, 'swish'], [2.0], [3.0, 'stamp']],
+  { id: 'book', extra: 1.5, pops: () => [[.1, 'whoosh'], [.45, 'swish'], [.75, 'swish'], [1.05, 'swish'], [1.6], [2.2, 'stamp']],
     draw: t => bookJ(t, ['Austin,', 'Texas'], (t) => { homeBG(t, false); person({ ...J13, x: 1200, y: 560, s: .4 }, t); person({ ...SARAH, x: 1340, y: 560, s: .3 }, t); }) },
   { id: 'dad', trans: 'zoom', zoomAt: [1280, 440], pops: () => [[at('dad', 'single dad')], [at('dad', 'always tired')], [at('dad', 'Sarah')], [at('dad', 'smarter'), 'ding']],
     draw(t) {
@@ -209,7 +209,7 @@ const J = [
       pill(t, at('outbreak', 'Tommy grabs') + .2, 960, 330, 'TOMMY', 'your brother · driving');
       if (t > at('outbreak', 'A soldier')) { person({ ...SOLDIER, x: 1680, y: 980, s: .9, seed: 5 }, t); ctx.save(); ctx.translate(1600, 600); ctx.rotate(Math.PI - .15); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(900, -120); ctx.lineTo(900, 120); ctx.closePath(); ctx.fillStyle = 'rgba(255,250,210,.25)'; ctx.fill(); ctx.restore(); pill(t, at('outbreak', 'A soldier'), 1600, 200, 'ORDERS', 'nobody leaves'); }
     } },
-  { id: 'ch1', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'I', 'Twenty Years Later') },
+  { id: 'ch1', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'I', 'Twenty Years Later') },
   { id: 'smuggler', pops: () => [[at('smuggler', 'smuggler')], [at('smuggler', 'allergic')], [at('smuggler', 'You still wear') - .2, 'swish'], [at('smuggler', 'still broken'), 'ding']],
     draw(t) {
       bostonBG(t); person({ ...J33, x: 760, y: 1000, s: 1, brow: 'angry', seed: 1 }, t);
@@ -241,7 +241,7 @@ const J = [
       pill(t, at('tess', 'Tess'), 1260, 230, 'TESS', 'your partner'); stampText(t, at('tess', 'Tess') + .8, 1500, 420, 'BITTEN', .8);
       pill(t, at('tess', 'stays behind'), 1260, 360, 'STAYS BEHIND', 'so you can run', { bg: PAL.mint });
     } },
-  { id: 'ch2', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'II', 'The Road West') },
+  { id: 'ch2', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'II', 'The Road West') },
   { id: 'road', pops: () => [[at('road', 'cross the country')], [at('road', 'terrible puns'), 'ding'], [at('road', 'pretend')], [at('road', 'Hold that') - .2, 'swish'], [at('road', 'Hold that') + .2]],
     draw(t) {
       ruinsBG(t, 'summer', t * 140);
@@ -292,7 +292,7 @@ const J = [
       memoryBoard(t, at('giraffe', 'Told you') - .3, 0, 1, { hi: [1], tHi: at('giraffe', 'Told you') + .1 });
       eraTag(t, 'SALT LAKE CITY · SPRING');
     } },
-  { id: 'ch3', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'III', 'The Hospital') },
+  { id: 'ch3', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'III', 'The Hospital') },
   { id: 'hospital', pops: () => [[at('hospital', 'Fireflies finally')], [at('hospital', 'Good news'), 'ding'], [at('hospital', 'Bad news'), 'stamp'], [at('hospital', 'nobody'), 'stamp']],
     draw(t) {
       hospitalBG(t); rr(760, 700, 400, 60, 14); fs('#f4f8f8'); line(800, 760, 800, 900, 10); line(1120, 760, 1120, 900, 10);
@@ -335,7 +335,7 @@ const J = [
         text('♥ ' + Math.floor(likes * (1 + clamp(t - ti, 0, 3) * .05)).toLocaleString('en-US'), 880, 0, '700 32px Fredoka', PAL.pink, 'right'); ctx.restore(); });
       ctx.restore(); pill(t, at('midcta', 'most liked'), 1500, 900, 'MOST LIKED = NEXT', null, { bg: PAL.gold, rot: -.05 });
     } },
-  { id: 'ch4', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'IV', 'Jackson') },
+  { id: 'ch4', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'IV', 'Jackson') },
   { id: 'jackson', pops: () => [[at('jackson', 'Jackson')], [at('jackson', 'guitar'), 'ding'], [at('jackson', 'museum'), 'whoosh'], [at('jackson', 'astronaut')], [at('jackson', 'Best day'), 'ding']],
     draw(t) {
       const tm = at('jackson', 'museum');
@@ -364,7 +364,7 @@ const J = [
       bubble(t, at('porch', 'like to try'), 1280, 400, "But I'd like to try.", { left: true });
       eraTag(t, 'JACKSON · THE PORCH');
     } },
-  { id: 'ch5', len: 2.8, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'V', 'The Daughter') },
+  { id: 'ch5', len: 1.85, pops: () => [[.1, 'stamp']], draw: t => chapterJ(t, 'V', 'The Daughter') },
   { id: 'abby', pops: () => [[at('abby', 'snowstorm'), 'whoosh'], [at('abby', 'Abby')], [at('abby', 'Remember that surgeon') - .2, 'swish'], [at('abby', "That's her"), 'stamp'], [at('abby', 'very long way')]],
     draw(t) {
       sky(['#5a6a7a', '#9aaab8', '#d8e0e8']); ground(780, '#f4f6f8', '#d0d8e0');
@@ -383,6 +383,6 @@ const J = [
       ['Lost a daughter', 'Found another one', 'Chose her over the world'].forEach((it, i) => { const tc = [at('ending', 'lost a daughter'), at('ending', 'found another'), at('ending', 'chose her')][i]; if (t < tc) return; ctx.save(); ctx.globalAlpha = clamp((t - tc) / .25); text('•  ' + it, 1110, 385 + i * 110, '700 50px Caveat', INK, 'left'); ctx.restore(); });
       ctx.restore(); pill(t, at('ending', 'Not bad'), 1370, 860, 'NOT BAD', 'for a guy who tried not to care', { bg: PAL.mint });
     } },
-  { id: 'outro', extra: 3, pops: () => [[.4], [1.4, 'stamp']], draw: t => bookJ(t, null, null, true) },
+  { id: 'outro', extra: 1.8, pops: () => [[.4], [1.4, 'stamp']], draw: t => bookJ(t, null, null, true) },
 ];
 SCENES.length = 0; SCENES.push(...J);

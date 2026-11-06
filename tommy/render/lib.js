@@ -2,7 +2,8 @@
 const W = 1920, H = 1080, INK = '#24122e', FPS = 30;
 // GTA 6-style palette: hot pink / orange / purple sunset + neon teal
 const PAL = { pink: '#ff2d95', hot: '#ff5fb0', orange: '#ff8a3d', gold: '#ffc94a', purple: '#7a3cff', deep: '#2a0b52', teal: '#19e0d0', mint: '#8af7dc', sky: '#46c8ff' };
-const PRE = 0.35, POST = 0.6, TR = 0.45;
+const PRE = 0.12, POST = 0.22, TR = 0.45, CH_LEAD = 1.45, BOOK_LEAD = 1.1;
+const LEAD = {};
 let ctx;
 const main = document.getElementById('cv').getContext('2d');
 const bufA = new OffscreenCanvas(W, H).getContext('2d');
@@ -277,18 +278,20 @@ let TL = [], TOTAL = 0, EVENTS = [];
 function at(id, phrase) {
   const s = SCRIPT.find(x => x.id === id); const i = s.text.indexOf(phrase);
   if (i < 0) throw new Error('phrase not found: ' + phrase);
-  return PRE + DUR[id] * i / s.text.length;
+  return PRE - (LEAD[id] || 0) + DUR[id] * i / s.text.length;
 }
 function setup() {
   makeGrain();
   let t = 0;
+  // voice after a chapter card / the book starts while that card is still on screen, so narration never stops
+  SCENES.forEach((sc, i) => { const prev = SCENES[i - 1]; if (prev && DUR[sc.id]) { if (!DUR[prev.id]) LEAD[sc.id] = CH_LEAD; else if (prev.id === 'book') LEAD[sc.id] = BOOK_LEAD; } });
   for (const sc of SCENES) {
-    const d = (sc.len ? sc.len : PRE + (DUR[sc.id] || 0) + POST) + (sc.extra || 0);
+    const d = (sc.len ? sc.len : PRE - (LEAD[sc.id] || 0) + (DUR[sc.id] || 0) + POST) + (sc.extra || 0);
     TL.push({ ...sc, start: t, dur: d }); t += d;
   }
   TOTAL = t + 0.6;
   TL.forEach((sc, i) => {
-    if (sc.id && DUR[sc.id]) EVENTS.push({ type: 'voice', id: sc.id, t: sc.start + PRE });
+    if (sc.id && DUR[sc.id]) EVENTS.push({ type: 'voice', id: sc.id, t: sc.start + PRE - (LEAD[sc.id] || 0) });
     (sc.pops ? sc.pops() : []).forEach(p => EVENTS.push({ type: p[1] || 'pop', t: sc.start + p[0] }));
     if (i > 0) EVENTS.push({ type: 'whoosh', t: sc.start - TR * .7 });
   });
