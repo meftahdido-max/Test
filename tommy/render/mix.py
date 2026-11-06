@@ -86,7 +86,15 @@ for e in info["ev"]:
 
 cfg_path = os.path.join(os.path.dirname(ev_path), "music.json")
 cfg = json.load(open(cfg_path)) if os.path.exists(cfg_path) else {"levels": {}}
-music = score.build(T, sorted(scenes) or [(0, "")], cfg)[:n]
+if cfg.get("file"):  # a finished track (e.g. ElevenLabs Music or a licensed beat): fit it to the video
+    trk = load(os.path.join(os.path.dirname(ev_path), cfg["file"])).astype(np.float64)
+    trk = trk[int(cfg.get("offset", 0) * SR):]  # skip a quiet intro
+    while len(trk) < n: trk = np.concatenate([trk, trk])
+    trk = trk[:n]; tt_ = np.arange(n) / SR
+    trk *= np.clip(tt_ / 1.0, 0, 1) * np.clip((T - tt_) / 2.5, 0, 1)
+    music = (trk / (np.sqrt(np.mean(trk ** 2)) + 1e-9)).astype(np.float32)
+else:
+    music = score.build(T, sorted(scenes) or [(0, "")], cfg)[:n]
 music = np.pad(music, (0, n - len(music))) * 10 ** (cfg.get("db", -27) / 20)
 
 # duck music under the voice

@@ -1,7 +1,7 @@
 {
  "style": "westdark",
  "bpm": 88,
- "db": -25,
+ "db": -24,
  "levels": {
   "hook1": 2,
   "hook2": 1,
@@ -12,5 +12,7 @@
  "minor": [
   "hook2",
   "home"
- ]
+ ],
+ "file": "cj_beat.mp3",
+ "offset": 6
 }

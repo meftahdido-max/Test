@@ -76,19 +76,19 @@ function bookCJ(t) {
 }
 
 const CJS = [
-  { id: 'hook1', pops: () => [[at('hook1', 'Carl Johnson') + .6], [at('hook1', "you'd come") - .1, 'whoosh'], [at('hook1', "you'd come") + .2], [at('hook1', 'get framed')], [at('hook1', 'then end up')], [at('hook1', 'crooked cop'), 'stamp'], [at('hook1', 'half the state'), 'stamp']],
+  { id: 'hook1', pops: () => [[at('hook1', 'Carl Johnson') + .6], [at('hook1', "you'd rob") - .1, 'whoosh'], [at('hook1', "you'd rob") + .2], [at('hook1', 'Las Venturas'), 'stamp'], [at('hook1', 'steal a jetpack')], [at('hook1', 'military base'), 'stamp'], [at('hook1', 'and take down')], [at('hook1', 'Los Santos.'), 'stamp']],
     draw(t) {
       groveBG(t, 'sunset'); const g = ctx.createRadialGradient(960, 520, 50, 960, 520, 620); g.addColorStop(0, 'rgba(240,140,60,.4)'); g.addColorStop(1, 'rgba(240,140,60,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       person({ ...CJ, x: 960, y: 1560, s: 1.75, brow: 'angry', seed: 1 }, t);
       pill(t, at('hook1', 'Carl Johnson') + .6, 520, 330, "CARL 'CJ' JOHNSON", "GTA San Andreas · (that's you)", { rot: -.04 });
-      const tl = at('hook1', "you'd come") - .1, k = eout(prog(t, tl, .45)); if (k <= 0) return;
+      const tl = at('hook1', "you'd rob") - .1, k = eout(prog(t, tl, .45)); if (k <= 0) return;
       ctx.save(); ctx.globalAlpha = k; rays(t, '#1a0f0a', '#2fbf4a', '#f08a30'); ctx.restore();
       ctx.save(); ctx.translate(0, lerp(1100, 0, k));
       rr(470, 90, 980, 800, 30); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill(); rr(460, 70, 980, 800, 30); fs('#f4f0e0', 6);
-      text("CJ'S", 950, 130, '700 30px Fredoka', '#4a6a3a', 'center', 'middle', '8px'); text('1992', 950, 190, '700 72px Almendra', INK); line(560, 240, 1340, 240, 4, 'rgba(36,18,46,.4)');
-      [{ icon: '♥', label: "MOM'S FUNERAL", sub: '(why you came home)', col: '#c84a6a', t0: at('hook1', "you'd come") + .2 },
-       { icon: '!', label: 'FRAMED', sub: '(in five minutes)', col: '#1e2a4a', t0: at('hook1', 'get framed'), st: at('hook1', 'crooked cop'), stamp: 'BY A COP' },
-       { icon: '★', label: 'SAN ANDREAS', sub: '(half of it)', col: PAL.pink, t0: at('hook1', 'then end up'), st: at('hook1', 'half the state'), stamp: 'RUNNING IT' }].forEach((it, i) => {
+      text("CJ'S", 950, 130, '700 30px Fredoka', '#4a6a3a', 'center', 'middle', '8px'); text('TO-DO LIST', 950, 190, '700 72px Almendra', INK); line(560, 240, 1340, 240, 4, 'rgba(36,18,46,.4)');
+      [{ icon: '$', label: 'A CASINO', sub: '(the biggest in Las Venturas)', col: '#14a36a', t0: at('hook1', "you'd rob") + .2, st: at('hook1', 'Las Venturas'), stamp: 'ROBBED' },
+       { icon: '✈', label: 'A JETPACK', sub: '(from a secret military base)', col: '#1e2a4a', t0: at('hook1', 'steal a jetpack'), st: at('hook1', 'military base'), stamp: 'STOLEN' },
+       { icon: '★', label: 'TENPENNY', sub: '(the most crooked cop in LS)', col: '#c8322a', t0: at('hook1', 'and take down'), st: at('hook1', 'Los Santos.'), stamp: 'TAKEN DOWN' }].forEach((it, i) => {
         if (t < it.t0) return; const y = 360 + i * 200, s = popS(t, it.t0); ctx.save(); ctx.translate(560, y); ctx.scale(s, s);
         ell(50, 0, 50, 50); fs(it.col); text(it.icon, 50, 3, '700 44px Fredoka', '#fff'); text(it.label, 130, -12, '700 66px Fredoka', INK, 'left'); text(it.sub, 134, 48, '600 34px Caveat', '#4a6a3a', 'left'); ctx.restore();
         if (it.stamp) stampText(t, it.st, 1220, y, it.stamp, .7);
@@ -165,4 +165,5 @@ const CJS = [
       eraTag(t, 'BALLAS TURF · 1992');
     } },
 ];
+// (full story scenes are appended in cj_story.js)
 SCENES.length = 0; SCENES.push(...CJS);
