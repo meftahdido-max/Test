@@ -167,3 +167,96 @@ def build(T, scenes, cfg):
     fade = np.clip(t_all / 1.5, 0, 1) * np.clip((T - t_all) / 2.0, 0, 1)
     out = (out * fade)[:int(T * SR) + SR]
     return (out / (np.sqrt(np.mean(out ** 2)) + 1e-9)).astype(np.float32)  # unit RMS; caller sets level
+
+
+# ---------------------------------------------------------------------------
+# "acoustic" style — sparse, post-apocalyptic: fingerpicked guitar, a lonely high plucked string,
+# a low bowed drone, wind, and distant low drum hits for tension. Original; no existing theme used.
+def guitar(m, dur, vel=1.0, pos=.18, bright=1.0):
+    n = int(dur * SR); t = np.arange(n) / SR; f = mtof(m); out = np.zeros(n)
+    for h in range(1, 14):
+        fh = f * h * (1 + .0002 * h * h)
+        if fh > 10000: break
+        amp = abs(np.sin(np.pi * h * pos)) / h ** (1.6 / bright)
+        out += amp * np.sin(2 * np.pi * fh * t) * np.exp(-t * (1.6 + .55 * h * h / bright))
+    click = rng.standard_normal(n) * np.exp(-t * 900) * .05
+    return (out + click) * np.minimum(1, t / .002) * vel
+
+
+def drone(m, dur, swell=1.2):
+    n = int(dur * SR); t = np.arange(n) / SR; f = mtof(m)
+    vib = 1 + .004 * np.sin(2 * np.pi * 5 * t)
+    ph = 2 * np.pi * np.cumsum(f * vib) / SR; out = np.zeros(n)
+    for h in range(1, 9): out += np.sin(h * ph) / h
+    a = np.minimum(1, t / swell) * np.minimum(1, (dur - t) / swell)
+    return lp(out, 700) * a
+
+
+def wind(n):
+    t = np.arange(n) / SR
+    x = lfilter(*butter(2, [250 / (SR / 2), 1100 / (SR / 2)], 'band'), rng.standard_normal(n))
+    gust = .55 + .3 * np.sin(2 * np.pi * t * .07) + .15 * np.sin(2 * np.pi * t * .23 + 1)
+    return x * gust * .5
+
+
+def boom():
+    t = np.arange(int(2.2 * SR)) / SR
+    return (np.sin(2 * np.pi * (58 * t - 6 * t * t)) * np.exp(-t * 2.2) + lp(rng.standard_normal(len(t)), 400) * np.exp(-t * 6) * .4) * .9
+
+
+HOPE = [([43, 50, 55, 59, 62], 31), ([42, 50, 57, 62, 66], 30), ([40, 47, 52, 55, 59], 28), ([48, 52, 55, 60, 64], 36)]   # G  D/F#  Em  C
+DARK = [([45, 52, 57, 60, 64], 33), ([41, 48, 53, 57, 60], 29), ([48, 52, 55, 60, 64], 36), ([40, 47, 52, 56, 59], 28)]   # Am  F  C  E
+PENTA = {False: [67, 69, 71, 74, 76, 79], True: [69, 72, 74, 76, 79, 81]}
+
+
+def build_acoustic(T, scenes, cfg):
+    bpm = cfg.get('bpm', 72); beat = 60 / bpm; bar = beat * 4
+    n = int((T + 4) * SR); gtr = np.zeros(n); low = np.zeros(n); perc = np.zeros(n)
+
+    def put(buf, x, t):
+        i = int(t * SR)
+        if i >= len(buf) or i < 0: return
+        m = min(len(x), len(buf) - i); buf[i:i + m] += x[:m]
+
+    def scene_at(t):
+        cur = scenes[0][1]
+        for s, sid in scenes:
+            if s <= t + .05: cur = sid
+        return cur
+
+    B = boom(); mel_i = 2; nbars = int(T / bar) + 2
+    for b in range(nbars):
+        tb = b * bar; sid = scene_at(tb)
+        lvl = cfg['levels'].get(sid, 1); dark = sid in cfg.get('minor', [])
+        notes, root = (DARK if dark else HOPE)[b % 4]; var = (b // 4) % 3
+        put(low, drone(root + 12, bar + 1.2, 1.0) * (.5 if lvl == 0 else .7), tb)
+        # fingerpicking: thumb on the bass string, fingers walking up the chord
+        order = [[0, 2, 3, 4, 3, 2, 3, 4], [0, 3, 2, 4, 1, 3, 2, 4], [0, 2, 4, 3, 1, 2, 4, 3]][var]
+        skip = {0: {1, 5}, 1: set(), 2: set()}[min(lvl, 2)]
+        for e8, idx in enumerate(order):
+            if e8 in skip: continue
+            put(gtr, guitar(notes[idx] + 12 * (idx > 0 and lvl == 2 and e8 % 2), 2.6, .55 if e8 else .7), tb + e8 * beat / 2 + rng.uniform(0, .012))
+        if lvl >= 1:  # lonely high plucked line, sparse
+            for q in (0, 2) if lvl == 1 else (0, 1, 2, 3):
+                if rng.random() < (.55 if lvl == 1 else .7):
+                    mel_i = int(np.clip(mel_i + rng.integers(-1, 2), 0, 5))
+                    put(gtr, guitar(PENTA[dark][mel_i], 1.8, .45, pos=.09, bright=1.6), tb + q * beat + rng.uniform(0, .02))
+        if lvl >= 2:  # distant drum hits on 1 and the "and" of 3
+            put(perc, B * .7, tb); put(perc, B * .45, tb + 2.5 * beat)
+            if b % 4 == 3: put(perc, B * .35, tb + 3.5 * beat)
+    ir_t = np.arange(int(3.2 * SR)) / SR; ir = rng.standard_normal(len(ir_t)) * np.exp(-ir_t * 1.8); ir /= np.sqrt(np.sum(ir ** 2))
+    dry = gtr + .55 * low
+    wet = fftconvolve(dry + perc, ir)[:n]
+    out = dry + .45 * wet + perc * .8 + wind(n) * cfg.get('wind', .25)
+    out = hp(out, 40)
+    t_all = np.arange(n) / SR
+    fade = np.clip(t_all / 2.5, 0, 1) * np.clip((T - t_all) / 3.0, 0, 1)
+    out = (out * fade)[:int(T * SR) + SR]
+    return (out / (np.sqrt(np.mean(out ** 2)) + 1e-9)).astype(np.float32)
+
+
+_build_house = build
+
+
+def build(T, scenes, cfg):
+    return build_acoustic(T, scenes, cfg) if cfg.get('style') == 'acoustic' else _build_house(T, scenes, cfg)
